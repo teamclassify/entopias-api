@@ -22,8 +22,6 @@ app.get("/api", (_, res) => {
 // import nameRouter from "./routes/NameRouter.js";
 // app.use("/api/name-endpoint", nameRouter);
 
-app.use(handleErrors);
-
 app.listen(PORT, () => {
   console.log(`Server start with port ${PORT}`);
 });
