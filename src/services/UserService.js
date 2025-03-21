@@ -6,10 +6,6 @@ class UserService {
   async find(where) {
     const users = await prisma.user.findMany({
       where,
-      include: {
-        roles: true,
-        addresses: true,
-      },
     });
 
     return users;
@@ -19,10 +15,6 @@ class UserService {
     const user = await prisma.user.findUnique({
       where: {
         id: id,
-      },
-      include: {
-        roles: true,
-        addresses: true,
       },
     });
 
@@ -34,38 +26,6 @@ class UserService {
       data,
     });
 
-    const roleUser = await prisma.role.findFirst({
-      where: {
-        name: "user",
-      },
-    });
-
-    await prisma.usersOnRoles.create({
-      data: {
-        role: {
-          connect: {
-            id: roleUser.id,
-          },
-        },
-        user: {
-          connect: {
-            id: userCreated.id,
-          },
-        },
-        assignedBy: "system",
-      },
-    });
-
-    await prisma.cart.create({
-      data: {
-        user: {
-          connect: {
-            id: userCreated.id,
-          },
-        },
-      },
-    });
-
     return userCreated;
   }
 
@@ -73,8 +33,6 @@ class UserService {
     const userDeleted = await prisma.user.delete({
       where: id,
     });
-
-    console.log(userDeleted);
 
     return { deleted: true };
   }

@@ -25,11 +25,11 @@ const verifyToken = (req, res, next) => {
       const uid = decodedToken.uid;
       req.id = uid;
 
-      if (req.user) {
-        return next();
-      } else {
-        req.user = await userService.findOne(uid);
-      }
+      // if (req.user) {
+      //   return next();
+      // } else {
+      //   req.user = await userService.findOne(uid);
+      // }
 
       next();
     })
