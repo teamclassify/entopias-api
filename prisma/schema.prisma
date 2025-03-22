@@ -7,13 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Role {
+  id    Int            @id @default(autoincrement())
+  name  String         @unique
+  users UsersOnRoles[]
+}
+
 model User {
-  id        String   @id
-  email     String   @unique
-  name      String?
+  id        String         @id
+  email     String         @unique
+  name      String
   phone     String?
   photo     String?
-  gender    String?  @default("na")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  gender    String?        @default("na")
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  roles     UsersOnRoles[]
+}
+
+model UsersOnRoles {
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  roleId     Int
+  role       Role     @relation(fields: [roleId], references: [id])
+  assignedAt DateTime @default(now())
+
+  @@id([userId, roleId])
 }

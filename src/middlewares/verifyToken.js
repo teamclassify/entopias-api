@@ -14,7 +14,7 @@ const verifyToken = (req, res, next) => {
       .setMsg("unauthorized")
       .build();
 
-    return res.status(401).json(response);
+    return res.status(response.status).json(response);
   }
 
   token = token.split(" ")[1];
@@ -40,7 +40,7 @@ const verifyToken = (req, res, next) => {
         .setMsg("unauthorized")
         .build();
 
-      return res.status(401).json(response);
+      return res.status(response.status).json(response);
     });
 };
 

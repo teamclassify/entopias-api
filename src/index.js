@@ -4,6 +4,7 @@ import { PORT } from "./config/index.js";
 import handleErrors from "./middlewares/handleErrors.js";
 
 import authRouter from "./routes/Auth.js";
+import productsRouter from "./routes/Products.js";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.get("/api", (_, res) => {
 // app.use("/api/name-endpoint", nameRouter);
 
 app.use("/api/auth", authRouter);
+app.use("/api/products", productsRouter);
 
 app.use(handleErrors);
 
