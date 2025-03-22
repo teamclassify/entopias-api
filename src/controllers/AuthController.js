@@ -7,7 +7,7 @@ class AuthController {
     this.userService = new AuthService();
   }
 
-  login = async (req, res) => {
+  login = async (req, res, next) => {
     const id = req.id;
 
     if (!id) {
@@ -37,23 +37,26 @@ class AuthController {
       res.json(data);
     } else {
       // create user in db and return it
-      const userCreated = await this.userService.create({
-        id: id,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName ?? null,
-        email: req.body.email,
-        photo: req.body.photo ?? null,
-        phone: req.body.phone ?? null,
-        gender: "na",
-      });
+      try {
+        const userCreated = await this.userService.create({
+          id: id,
+          name: req.body.name,
+          email: req.body.email,
+          photo: req.body.photo ?? null,
+          phone: req.body.phone ?? null,
+          gender: "na",
+        });
 
-      const data = new ResponseDataBuilder()
-        .setData(userCreated)
-        .setStatus(201)
-        .setMsg("User created")
-        .build();
+        const data = new ResponseDataBuilder()
+          .setData(userCreated)
+          .setStatus(201)
+          .setMsg("User created")
+          .build();
 
-      res.json(data);
+        res.json(data);
+      } catch (err) {
+        next(err);
+      }
     }
   };
 

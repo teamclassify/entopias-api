@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import { PORT } from "./config/index.js";
+import handleErrors from "./middlewares/handleErrors.js";
 
 import authRouter from "./routes/Auth.js";
 
@@ -25,6 +26,8 @@ app.get("/api", (_, res) => {
 // app.use("/api/name-endpoint", nameRouter);
 
 app.use("/api/auth", authRouter);
+
+app.use(handleErrors);
 
 app.listen(PORT, () => {
   console.log(`Server start with port ${PORT}`);
