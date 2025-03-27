@@ -16,21 +16,21 @@ model Role {
 model User {
   id        String         @id
   email     String         @unique
-  name      String
+  createdAt DateTime       @default(now())
+  gender    String?        @default("na")
   phone     String?
   photo     String?
-  gender    String?        @default("na")
-  createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
+  name      String
   roles     UsersOnRoles[]
 }
 
 model UsersOnRoles {
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
   roleId     Int
-  role       Role     @relation(fields: [roleId], references: [id])
   assignedAt DateTime @default(now())
+  role       Role     @relation(fields: [roleId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@id([userId, roleId])
 }
