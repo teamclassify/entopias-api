@@ -1,3 +1,4 @@
+import authApp from "../config/firebase.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
 import AuthService from "../services/UserService.js";
 import validateBody from "../validators/validator.js";
@@ -59,6 +60,68 @@ class AuthController {
         console.log(err);
         next(err);
       }
+    }
+  };
+
+  register = async (req, res, next) => {
+    if (validateBody(req, res)) {
+      return;
+    }
+
+    const { name, email, password, phone } = req.body;
+
+    try {
+      const userCreated = await authApp.createUser({
+        displayName: name,
+        email,
+        password,
+        emailVerified: true,
+      });
+
+      console.log(userCreated);
+
+      if (userCreated) {
+        const userCreatedInDB = await this.userService.create({
+          id: userCreated.uid,
+          name: name,
+          email: email,
+          photo: null,
+          phone: phone ?? null,
+          gender: "na",
+          role: "sales",
+        });
+
+        if (!userCreatedInDB) {
+          const data = new ResponseDataBuilder()
+            .setData(null)
+            .setStatus(400)
+            .setMsg("User not created")
+            .build();
+
+          res.status(400).json(data);
+          return;
+        }
+
+        const data = new ResponseDataBuilder()
+          .setData(userCreatedInDB)
+          .setStatus(201)
+          .setMsg("User created")
+          .build();
+
+        res.status(201).json(data);
+        return;
+      }
+
+      const data = new ResponseDataBuilder()
+        .setData(null)
+        .setStatus(400)
+        .setMsg("User not created")
+        .build();
+
+      res.status(400).json(data);
+    } catch (err) {
+      console.log(err);
+      next(err);
     }
   };
 
