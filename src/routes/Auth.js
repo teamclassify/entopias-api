@@ -19,7 +19,25 @@ authRouter.post(
     body("email").isEmail().withMessage("El email debe ser válido."),
   ],
 
-  controller.login,
+  controller.login
+);
+
+authRouter.post(
+  "/register",
+
+  [
+    body("name").notEmpty().withMessage("El nombre es requerido."),
+    body("email").isEmail().withMessage("El email debe ser válido."),
+    body("password")
+      .isLength({ min: 6 })
+      .withMessage("La contraseña debe tener al menos 6 caracteres."),
+    body("phone")
+      .optional()
+      .isMobilePhone()
+      .withMessage("El teléfono debe ser válido."),
+  ],
+
+  controller.register
 );
 
 export default authRouter;
