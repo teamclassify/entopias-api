@@ -5,7 +5,8 @@ import handleErrors from "./middlewares/handleErrors.js";
 
 import authRouter from "./routes/Auth.js";
 import productsRouter from "./routes/Products.js";
-import cafeRouter from "./routes/Cafe.js";
+import cafeRouter from "./routes/Cafes.js";
+import lotesRouter from "./routes/Lotes.js"
 
 const app = express();
 
@@ -29,7 +30,8 @@ app.get("/api", (_, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
-app.use("/api/cafes", cafeRouter)
+app.use("/api/cafes", cafeRouter);
+app.use("/api/lotes", lotesRouter);
 
 app.use(handleErrors);
 

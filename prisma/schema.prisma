@@ -35,6 +35,17 @@ model UsersOnRoles {
   @@id([userId, roleId])
 }
 
+model Lote {
+  id            Int       @id @default(autoincrement())
+  pesoCafe      Float
+  tipoTueste    String
+  fechaTostado  DateTime
+  fechaLote     DateTime
+  cafeId        Int
+  cafe          Cafe      @relation(fields: [cafeId], references: [id])
+  //products      Product[]
+}
+
 model Cafe {
   id              Int      @id @default(autoincrement())
   nombre          String
@@ -44,4 +55,5 @@ model Cafe {
   cantidad        Float
   proceso         String
   notasOlfativas  String
+  lotes           Lote[]
 }
