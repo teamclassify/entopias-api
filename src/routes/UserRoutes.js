@@ -1,5 +1,8 @@
 import express from "express";
 import UserController from "../controllers/UserController.js";
+import { isAdmin } from "../middlewares/rbac.js";
+import verifyToken from "../middlewares/verifyToken.js";
+import { body } from "express-validator";
 
 const router = express.Router();
 /**
@@ -37,7 +40,7 @@ const router = express.Router();
  *                     type: string
  *                     example: "orlando@gmail.com"
  */
-router.get("/", UserController.getAllUsers);
+router.get("/", verifyToken, isAdmin, UserController.getAllUsers);
 
 /**
  * @swagger
@@ -60,49 +63,7 @@ router.get("/", UserController.getAllUsers);
  *       404:
  *         description: Usuario no encontrado
  */
-router.get("/:id", UserController.getUserById);
-
-/**
- * @swagger
- * /users:
- *   post:
- *     summary: Crea un nuevo usuario
- *     description: Agrega un nuevo usuario a la base de datos.
- *     tags:
- *       - Usuarios
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *                 example: "Orlando"
- *               photo:
- *                 type: string
- *                 example: "orlando.jpg"
- *               gender:
- *                 type: string
- *                 enum: [male, female]
- *                 example: "male"
- *               phone:
- *                 type: string
- *                 example: "3001234567"
- *               email:
- *                 type: string
- *                 example: "orlando@gmail.com"
- *               role:
- *                 type: string
- *                 example: "admin"
- *     responses:
- *       201:
- *         description: Usuario creado con éxito
- *       400:
- *         description: Error en la solicitud
- */
-router.post("/", UserController.createUser);
+router.get("/:id", verifyToken, UserController.getUserById);
 
 /**
  * @swagger
@@ -153,29 +114,19 @@ router.post("/", UserController.createUser);
  *       404:
  *         description: Usuario no encontrado
  */
-router.put("/:id", UserController.updateUser);
+router.put(
+  "/:id",
+  verifyToken,
 
-/**
- * @swagger
- * /users/{id}:
- *   delete:
- *     summary: Elimina un usuario por ID
- *     description: Borra un usuario específico de la base de datos.
- *     tags:
- *       - Usuarios
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del usuario a eliminar
- *     responses:
- *       200:
- *         description: Usuario eliminado con éxito
- *       404:
- *         description: Usuario no encontrado
- */
-router.delete("/:id", UserController.deleteUser);
+  [
+    body("name").notEmpty().withMessage("El nombre es requerido."),
+    body("phone")
+      .optional()
+      .isMobilePhone()
+      .withMessage("El teléfono debe ser válido."),
+  ],
+
+  UserController.updateUser
+);
 
 export default router;
