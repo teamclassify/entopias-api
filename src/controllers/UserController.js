@@ -1,23 +1,49 @@
+import ResponseDataBuilder from "../models/ResponseData.js";
 import UserService from "../services/UserService.js";
+import validateBody from "../validators/validator.js";
 
 class UserController {
-  static async getAllUsers(req, res) {
+  static async getAllUsers(req, res, next) {
     try {
       const users = await new UserService().find();
-      res.json(users);
+
+      const data = new ResponseDataBuilder()
+        .setData(users)
+        .setStatus(200)
+        .setMsg("Usuarios encontrados")
+        .build();
+
+      res.status(200).json(data);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log(error);
+      next(error);
     }
   }
 
-  static async getUserById(req, res) {
+  static async getUserById(req, res, next) {
     try {
       const user = await new UserService().findOne(req.params.id);
-      if (!user)
-        return res.status(404).json({ message: "Usuario no encontrado" });
-      res.json(user);
+
+      if (!user) {
+        const data = new ResponseDataBuilder()
+          .setData(null)
+          .setStatus(404)
+          .setMsg("Usuario no encontrado")
+          .build();
+
+        return res.status(404).json(data);
+      }
+
+      const data = new ResponseDataBuilder()
+        .setData(user)
+        .setStatus(200)
+        .setMsg("Usuario encontrado")
+        .build();
+
+      res.status(200).json(data);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log(error);
+      next(error);
     }
   }
 
@@ -30,12 +56,24 @@ class UserController {
     }
   }
 
-  static async updateUser(req, res) {
+  static async updateUser(req, res, next) {
+    if (validateBody(req, res)) {
+      return;
+    }
+
     try {
-      const user = await new UserService().update(req.params.id, req.body);
-      res.json(user);
+      const user = await new UserService().update(req.id, req.body);
+
+      const data = new ResponseDataBuilder()
+        .setData(user)
+        .setStatus(200)
+        .setMsg("User updated")
+        .build();
+
+      res.json(data);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      console.log(error);
+      next(error);
     }
   }
 
