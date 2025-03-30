@@ -3,13 +3,26 @@ import prisma from "../config/prisma.js";
 class UserService {
   constructor() {}
 
-  async find(where, include) {
+  async countAll({ where } = {}) {
+    const count = await prisma.user.count({
+      where,
+    });
+    return count;
+  }
+
+  async find({ page = 0, where, include }) {
     const users = await prisma.user.findMany({
       where,
 
       include: {
         roles: true,
         ...include,
+      },
+
+      skip: (page - 1) * 10,
+      take: 10,
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -79,7 +92,7 @@ class UserService {
 
   async delete(id) {
     await prisma.user.delete({
-      where: {id:id},
+      where: { id: id },
     });
 
     return { deleted: true };
@@ -88,11 +101,11 @@ class UserService {
   async update(id, data) {
     // Verificar si el usuario existe
     const userExists = await prisma.user.findUnique({
-        where: { id },
+      where: { id },
     });
 
     if (!userExists) {
-        throw new Error("El usuario no existe.");
+      throw new Error("El usuario no existe.");
     }
 
     // Extraer el rol antes de actualizar el usuario
@@ -100,33 +113,33 @@ class UserService {
 
     // Actualizar los datos del usuario (sin modificar el rol)
     const updatedUser = await prisma.user.update({
-        where: { id },
-        data: userData,
+      where: { id },
+      data: userData,
     });
 
     if (role) {
-        // Buscar el ID del rol
-        const roleId = await this.findUserRoleId(role);
+      // Buscar el ID del rol
+      const roleId = await this.findUserRoleId(role);
 
-        // Actualizar o asignar el rol en la tabla intermedia
-        await prisma.usersOnRoles.upsert({
-            where: {
-                userId_roleId: {
-                    userId: id,
-                    roleId: roleId,
-                },
-            },
-            update: {},  // Si el usuario ya tiene ese rol, no hace nada
-            create: {
-                userId: id,
-                roleId: roleId,
-                assignedAt: new Date(),
-            },
-        });
+      // Actualizar o asignar el rol en la tabla intermedia
+      await prisma.usersOnRoles.upsert({
+        where: {
+          userId_roleId: {
+            userId: id,
+            roleId: roleId,
+          },
+        },
+        update: {}, // Si el usuario ya tiene ese rol, no hace nada
+        create: {
+          userId: id,
+          roleId: roleId,
+          assignedAt: new Date(),
+        },
+      });
     }
 
     return updatedUser;
-}
+  }
 }
 
 export default UserService;
