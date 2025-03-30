@@ -1,3 +1,4 @@
+import ResponseDataBuilder from "../models/ResponseData.js";
 import UserService from "../services/UserService.js";
 
 export const isAdmin = async (req, res, next) => {
@@ -12,7 +13,13 @@ export const isAdmin = async (req, res, next) => {
       return;
     }
 
-    res.status(403).json({ message: "Requiere rol de administrador!" });
+    const response = new ResponseDataBuilder()
+      .setData(null)
+      .setStatus(403)
+      .setError(true)
+      .setMsg("Requiere rol de administrador!")
+      .build();
+    res.status(403).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -30,7 +37,13 @@ export const isSales = async (req, res, next) => {
       return;
     }
 
-    res.status(403).json({ message: "Requiere rol de vendedor!" });
+    const response = new ResponseDataBuilder()
+      .setData(null)
+      .setStatus(403)
+      .setError(true)
+      .setMsg("Requiere rol de asistente!")
+      .build();
+    res.status(403).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -48,9 +61,14 @@ export const isSalesOrAdmin = async (req, res, next) => {
       return;
     }
 
-    res
-      .status(403)
-      .json({ message: "Requiere rol de vendedor o administrador!" });
+    const response = new ResponseDataBuilder()
+      .setData(null)
+      .setStatus(403)
+      .setError(true)
+      .setMsg("Requiere rol de asistente o administrador!")
+      .build();
+
+    res.status(403).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
