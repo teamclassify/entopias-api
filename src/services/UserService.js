@@ -21,7 +21,6 @@ class UserService {
       where: {
         id: id,
       },
-
       include: {
         roles: {
           include: {
@@ -40,24 +39,19 @@ class UserService {
         name: role,
       },
     });
-    return roleUser.id;
+    return roleUser?.id;
   }
 
   async assignUserRole(userId, roleId) {
-    await prisma.usersOnRoles.create({
-      data: {
-        role: {
-          connect: {
-            id: roleId,
-          },
-        },
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-      },
+    const existingAssignment = await prisma.usersOnRoles.findFirst({
+      where: { userId, roleId },
     });
+
+    if (!existingAssignment) {
+      await prisma.usersOnRoles.create({
+        data: { userId, roleId },
+      });
+    }
   }
 
   async create(data) {
@@ -74,28 +68,65 @@ class UserService {
 
     const roleId = await this.findUserRoleId(data.role);
 
+    /*if(!roleId){
+      throw new Error(`El rol ${data.role} NO existe`);
+    }*/
+
     await this.assignUserRole(userCreated.id, roleId);
 
     return userCreated;
   }
 
   async delete(id) {
-    const userDeleted = await prisma.user.delete({
-      where: id,
+    await prisma.user.delete({
+      where: {id:id},
     });
 
     return { deleted: true };
   }
 
   async update(id, data) {
-    const userUpdated = await prisma.user.update({
-      where: {
-        id: id,
-      },
-      data,
+    // Verificar si el usuario existe
+    const userExists = await prisma.user.findUnique({
+        where: { id },
     });
-    return userUpdated;
-  }
+
+    if (!userExists) {
+        throw new Error("El usuario no existe.");
+    }
+
+    // Extraer el rol antes de actualizar el usuario
+    const { role, ...userData } = data;
+
+    // Actualizar los datos del usuario (sin modificar el rol)
+    const updatedUser = await prisma.user.update({
+        where: { id },
+        data: userData,
+    });
+
+    if (role) {
+        // Buscar el ID del rol
+        const roleId = await this.findUserRoleId(role);
+
+        // Actualizar o asignar el rol en la tabla intermedia
+        await prisma.usersOnRoles.upsert({
+            where: {
+                userId_roleId: {
+                    userId: id,
+                    roleId: roleId,
+                },
+            },
+            update: {},  // Si el usuario ya tiene ese rol, no hace nada
+            create: {
+                userId: id,
+                roleId: roleId,
+                assignedAt: new Date(),
+            },
+        });
+    }
+
+    return updatedUser;
+}
 }
 
 export default UserService;
