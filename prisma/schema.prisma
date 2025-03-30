@@ -34,3 +34,14 @@ model UsersOnRoles {
 
   @@id([userId, roleId])
 }
+
+model Cafe {
+  id              Int      @id @default(autoincrement())
+  nombre          String
+  origen          String
+  finca           String
+  productor       String
+  cantidad        Float
+  proceso         String
+  notasOlfativas  String
+}

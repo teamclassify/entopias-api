@@ -5,6 +5,7 @@ import handleErrors from "./middlewares/handleErrors.js";
 
 import authRouter from "./routes/Auth.js";
 import productsRouter from "./routes/Products.js";
+import cafeRouter from "./routes/Cafe.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get("/api", (_, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
+app.use("/api/cafes", cafeRouter)
 
 app.use(handleErrors);
 
