@@ -1,8 +1,8 @@
 import express from "express";
-import UserController from "../controllers/UserController.js";
-import { isAdmin } from "../middlewares/rbac.js";
-import verifyToken from "../middlewares/verifyToken.js";
 import { body } from "express-validator";
+import UserController from "../controllers/UserController.js";
+import { isSalesOrAdmin } from "../middlewares/rbac.js";
+import verifyToken from "../middlewares/verifyToken.js";
 
 const router = express.Router();
 /**
@@ -40,7 +40,7 @@ const router = express.Router();
  *                     type: string
  *                     example: "orlando@gmail.com"
  */
-router.get("/", verifyToken, isAdmin, UserController.getAllUsers);
+router.get("/", verifyToken, isSalesOrAdmin, UserController.getAllUsers);
 
 /**
  * @swagger
