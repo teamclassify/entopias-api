@@ -1,19 +1,19 @@
 import ResponseDataBuilder from "../models/ResponseData.js";
-import CafeService from "../services/CafeService.js";
+import ProductService from "../services/ProductService.js";
 import validateBody from "../validators/validator.js";
 
-class CafeController {
+class ProductController {
   constructor() {
-    this.cafeService = new CafeService();
+    this.productService = new ProductService();
   }
 
   getAll = async (req, res, next) => {
     try {
-      const cafes = await this.cafeService.findAll();
+      const products = await this.productService.findAll();
       const data = new ResponseDataBuilder()
-        .setData(cafes)
+        .setData(products)
         .setStatus(200)
-        .setMsg("Cafes retrieved successfully")
+        .setMsg("Products retrieved successfully")
         .build();
       res.json(data);
     } catch (err) {
@@ -25,18 +25,18 @@ class CafeController {
   getOne = async (req, res, next) => {
     const { id } = req.params;
     try {
-      const cafe = await this.cafeService.findOne(id);
-      const data = cafe
+      const product = await this.productService.findOne(id);
+      const data = product
         ? new ResponseDataBuilder()
-          .setData(cafe)
-          .setStatus(200)
-          .setMsg("Cafe found")
-          .build()
+            .setData(product)
+            .setStatus(200)
+            .setMsg("Product found")
+            .build()
         : new ResponseDataBuilder()
-          .setData(null)
-          .setStatus(404)
-          .setMsg("Cafe not found")
-          .build();
+            .setData(null)
+            .setStatus(404)
+            .setMsg("Product not found")
+            .build();
       res.json(data);
     } catch (err) {
       console.error(err);
@@ -49,11 +49,11 @@ class CafeController {
       return;
     }
     try {
-      const cafe = await this.cafeService.create(req.body);
+      const product = await this.productService.create(req.body);
       const data = new ResponseDataBuilder()
-        .setData(cafe)
+        .setData(product)
         .setStatus(201)
-        .setMsg("Cafe created successfully")
+        .setMsg("Product created successfully")
         .build();
       res.status(201).json(data);
     } catch (err) {
@@ -68,18 +68,18 @@ class CafeController {
       return;
     }
     try {
-      const updatedCafe = await this.cafeService.update(id, req.body);
-      const data = updatedCafe
+      const updatedProduct = await this.productService.update(id, req.body);
+      const data = updatedProduct
         ? new ResponseDataBuilder()
-          .setData(updatedCafe)
-          .setStatus(200)
-          .setMsg("Cafe updated successfully")
-          .build()
+            .setData(updatedProduct)
+            .setStatus(200)
+            .setMsg("Product updated successfully")
+            .build()
         : new ResponseDataBuilder()
-          .setData(null)
-          .setStatus(404)
-          .setMsg("Cafe not found")
-          .build();
+            .setData(null)
+            .setStatus(404)
+            .setMsg("Product not found")
+            .build();
       res.json(data);
     } catch (err) {
       console.error(err);
@@ -90,18 +90,18 @@ class CafeController {
   delete = async (req, res, next) => {
     const { id } = req.params;
     try {
-      const deleted = await this.cafeService.delete(id);
+      const deleted = await this.productService.delete(id);
       const data = deleted
         ? new ResponseDataBuilder()
-          .setData(null)
-          .setStatus(200)
-          .setMsg("Cafe deleted successfully")
-          .build()
+            .setData(null)
+            .setStatus(200)
+            .setMsg("Product deleted successfully")
+            .build()
         : new ResponseDataBuilder()
-          .setData(null)
-          .setStatus(404)
-          .setMsg("Cafe not found")
-          .build();
+            .setData(null)
+            .setStatus(404)
+            .setMsg("Product not found")
+            .build();
       res.json(data);
     } catch (err) {
       console.error(err);
@@ -110,4 +110,4 @@ class CafeController {
   };
 }
 
-export default CafeController;
+export default ProductController;

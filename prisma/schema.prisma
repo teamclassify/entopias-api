@@ -35,6 +35,15 @@ model UsersOnRoles {
   @@id([userId, roleId])
 }
 
+model Product {
+  id            Int             @id @default(autoincrement())
+  name          String
+  descripcion   String
+  loteId        Int  
+  lote          Lote            @relation(fields: [loteId], references: [id])
+  //photos        ProductPhoto[]
+}
+
 model Lote {
   id            Int       @id @default(autoincrement())
   pesoCafe      Float
@@ -43,7 +52,7 @@ model Lote {
   fechaLote     DateTime
   cafeId        Int
   cafe          Cafe      @relation(fields: [cafeId], references: [id])
-  //products      Product[]
+  products      Product[]
 }
 
 model Cafe {
