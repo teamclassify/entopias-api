@@ -4,11 +4,29 @@ import validateBody from "../validators/validator.js";
 
 class UserController {
   static async getAllUsers(req, res, next) {
+    const { page, role } = req.query;
+
+    const where = {};
+
+    if (role) {
+      where.roles = {
+        some: {
+          role: {
+            name: role,
+          },
+        },
+      };
+    }
+
     try {
-      const users = await new UserService().find();
+      const users = await new UserService().find({ page, where });
+      const count = await new UserService().countAll({ where });
 
       const data = new ResponseDataBuilder()
-        .setData(users)
+        .setData({
+          users,
+          count,
+        })
         .setStatus(200)
         .setMsg("Usuarios encontrados")
         .build();
