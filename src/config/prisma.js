@@ -6,6 +6,31 @@ async function main() {
   // ... you will write your Prisma Client queries here
 
   try {
+    await prisma.role.create({
+      data: {
+        id: 0,
+        name: "admin",
+      },
+    });
+
+    await prisma.role.create({
+      data: {
+        id: 1,
+        name: "sales",
+      },
+    });
+
+    await prisma.role.create({
+      data: {
+        id: 2,
+        name: "user",
+      },
+    });
+  } catch (err) {
+    // console.log("ERROR CARGANDO EL ROL ADMIN.");
+  }
+
+  try {
     await prisma.user.create({
       data: {
         email: "byandrev@gmail.com",
@@ -16,7 +41,7 @@ async function main() {
       },
     });
   } catch (err) {
-    console.log("ERROR CREANDO EL USUARIO ADMIN.");
+    // console.log("ERROR CREANDO EL USUARIO ADMIN.");
   }
 
   try {
@@ -35,7 +60,7 @@ async function main() {
       },
     });
   } catch {
-    console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
+    // console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
   }
 
   try {
@@ -54,7 +79,7 @@ async function main() {
       },
     });
   } catch {
-    console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
+    // console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
   }
 
   try {
@@ -73,7 +98,7 @@ async function main() {
       },
     });
   } catch {
-    console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
+    // console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
   }
 }
 
