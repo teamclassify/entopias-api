@@ -137,6 +137,13 @@ class UserService {
           assignedAt: new Date(),
         },
       });
+    } else {
+      // Si no se proporciona un nuevo rol, eliminar la asignación existente
+      await prisma.usersOnRoles.deleteMany({
+        where: {
+          userId: id,
+        },
+      });
     }
 
     return updatedUser;
