@@ -7,6 +7,14 @@ const PORT = process.env.PORT || 8080;
 const MODE = process.env.MODE || "dev";
 const URL_FRONT = process.env.URL_FRONT;
 
+const EMAIL = {
+  HOST: process.env.EMAIL_SMPT_HOST,
+  PORT: process.env.EMAIL_SMPT_PORT,
+  SERVICE: process.env.EMAIL_SMPT_SERVICE,
+  MAIL: process.env.EMAIL_SMPT_MAIL,
+  APP_PASS: process.env.EMAIL_SMPT_APP_PASS,
+};
+
 const FIREBASE = {
   type: process.env.TYPE,
   project_id: process.env.PROJECT_ID,
@@ -23,4 +31,4 @@ const FIREBASE = {
   universe_domain: "googleapis.com",
 };
 
-export { MODE, PAGINATION_LIMIT, PORT, URL_FRONT, FIREBASE };
+export { MODE, PAGINATION_LIMIT, PORT, URL_FRONT, FIREBASE, EMAIL };
