@@ -40,12 +40,15 @@ class AuthController {
     } else {
       // create user in db and return it
       try {
+        const birthday = req.body.birthday ? new Date(req.body.birthday) : null;
+
         const userCreated = await this.userService.create({
           id: id,
           name: req.body.name,
           email: req.body.email,
           photo: req.body.photo ?? null,
           phone: req.body.phone ?? null,
+          birthday,
           gender: "na",
           role: req.body.role === "sales" ? "sales" : "user",
         });
