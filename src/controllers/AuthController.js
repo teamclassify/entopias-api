@@ -2,6 +2,7 @@ import authApp from "../config/firebase.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
 import AuthService from "../services/UserService.js";
 import validateBody from "../validators/validator.js";
+import sendEmail from "../utils/sendEmail.js";
 
 class AuthController {
   constructor() {
@@ -49,6 +50,15 @@ class AuthController {
           role: req.body.role === "sales" ? "sales" : "user",
         });
 
+        // send email to user
+        await sendEmail({
+          to: req.body.email,
+          subject: "Bienvenido a Entopias Cafe",
+          message: `Hola ${req.body.name}, bienvenido a Entopias Cafe, tu cuenta ha sido creada con exito.`,
+        }).catch((err) => {
+          console.log(err);
+        });
+
         const data = new ResponseDataBuilder()
           .setData(userCreated)
           .setStatus(201)
@@ -78,8 +88,6 @@ class AuthController {
         emailVerified: true,
       });
 
-      console.log(userCreated);
-
       if (userCreated) {
         const userCreatedInDB = await this.userService.create({
           id: userCreated.uid,
@@ -101,6 +109,15 @@ class AuthController {
           res.status(400).json(data);
           return;
         }
+
+        // send email to user
+        await sendEmail({
+          to: email,
+          subject: "Bienvenido a Entopias Cafe",
+          message: `Hola ${name}, bienvenido a Entopias Cafe, tu cuenta ha sido creada con exito.`,
+        }).catch((err) => {
+          console.log(err);
+        });
 
         const data = new ResponseDataBuilder()
           .setData(userCreatedInDB)
