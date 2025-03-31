@@ -22,6 +22,7 @@ model User {
   photo     String?
   updatedAt DateTime       @updatedAt
   name      String
+  birthday  DateTime?
   roles     UsersOnRoles[]
 }
 
@@ -36,33 +37,33 @@ model UsersOnRoles {
 }
 
 model Product {
-  id            Int             @id @default(autoincrement())
-  name          String
-  descripcion   String
-  loteId        Int  
-  lote          Lote            @relation(fields: [loteId], references: [id])
+  id          Int    @id @default(autoincrement())
+  name        String
+  descripcion String
+  loteId      Int
+  lote        Lote   @relation(fields: [loteId], references: [id])
   //photos        ProductPhoto[]
 }
 
 model Lote {
-  id            Int       @id @default(autoincrement())
-  pesoCafe      Float
-  tipoTueste    String
-  fechaTostado  DateTime
-  fechaLote     DateTime
-  cafeId        Int
-  cafe          Cafe      @relation(fields: [cafeId], references: [id])
-  products      Product[]
+  id           Int       @id @default(autoincrement())
+  pesoCafe     Float
+  tipoTueste   String
+  fechaTostado DateTime
+  fechaLote    DateTime
+  cafeId       Int
+  cafe         Cafe      @relation(fields: [cafeId], references: [id])
+  products     Product[]
 }
 
 model Cafe {
-  id              Int      @id @default(autoincrement())
-  nombre          String
-  origen          String
-  finca           String
-  productor       String
-  cantidad        Float
-  proceso         String
-  notasOlfativas  String
-  lotes           Lote[]
+  id             Int    @id @default(autoincrement())
+  nombre         String
+  origen         String
+  finca          String
+  productor      String
+  cantidad       Float
+  proceso        String
+  notasOlfativas String
+  lotes          Lote[]
 }
