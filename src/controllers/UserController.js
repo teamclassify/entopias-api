@@ -9,13 +9,28 @@ class UserController {
     const where = {};
 
     if (role) {
-      where.roles = {
-        some: {
-          role: {
-            name: role,
+      // Filter by role, solos usuarios con ese rol o sin rol
+      if (role === "sales") {
+        where.OR = [
+          {
+            roles: {
+              none: {
+                role: {
+                  name: "admin",
+                },
+              },
+            },
           },
-        },
-      };
+        ];
+      } else {
+        where.roles = {
+          some: {
+            role: {
+              name: role,
+            },
+          },
+        };
+      }
     }
 
     try {
@@ -79,8 +94,16 @@ class UserController {
       return;
     }
 
+    const { id } = req.params;
+    const { name, email, phone, role } = req.body;
+
     try {
-      const user = await new UserService().update(req.id, req.body);
+      const user = await new UserService().update(id, {
+        name,
+        email,
+        phone,
+        role,
+      });
 
       const data = new ResponseDataBuilder()
         .setData(user)
