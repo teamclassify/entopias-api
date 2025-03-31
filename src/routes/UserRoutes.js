@@ -1,7 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
 import UserController from "../controllers/UserController.js";
-import { isSalesOrAdmin } from "../middlewares/rbac.js";
+import { isAdmin, isSalesOrAdmin } from "../middlewares/rbac.js";
 import verifyToken from "../middlewares/verifyToken.js";
 
 const router = express.Router();
@@ -116,10 +116,12 @@ router.get("/:id", verifyToken, UserController.getUserById);
  */
 router.put(
   "/:id",
+
   verifyToken,
+  isAdmin,
 
   [
-    body("name").notEmpty().withMessage("El nombre es requerido."),
+    body("name").optional().isString().withMessage("El nombre es requerido."),
     body("phone")
       .optional()
       .isMobilePhone()
