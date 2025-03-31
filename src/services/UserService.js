@@ -76,6 +76,7 @@ class UserService {
         phone: data.phone,
         email: data.email,
         id: data.id,
+        birthday: data.birthday,
       },
     });
 
