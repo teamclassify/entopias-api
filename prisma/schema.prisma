@@ -53,6 +53,8 @@ model Product {
   precio         Float          @default(0.0)
   fechaMolido    DateTime?
   fechaCaducidad DateTime?
+  stock          Int            @default(0)
+  status         Boolean        @default(true)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @default(now()) @updatedAt
 }
