@@ -16,7 +16,7 @@ class ProductService {
     });
   }
 
-  async findAll() {
+  async findAll({ page }) {
     return await prisma.product.findMany({
       include: {
         lote: {
@@ -24,6 +24,12 @@ class ProductService {
             cafe: true,
           },
         },
+      },
+
+      skip: (page - 1) * 10,
+      take: 10,
+      orderBy: {
+        createdAt: "desc",
       },
     });
   }
