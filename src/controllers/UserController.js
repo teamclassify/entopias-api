@@ -11,7 +11,25 @@ class UserController {
     if (role) {
       // Filter by role, solos usuarios con ese rol o sin rol
       if (role === "sales") {
-        where.OR = [
+        where.AND = [
+          {
+            OR: [
+              {
+                roles: {
+                  none: {},
+                },
+              },
+              {
+                roles: {
+                  some: {
+                    role: {
+                      name: "sales",
+                    },
+                  },
+                },
+              },
+            ],
+          },
           {
             roles: {
               none: {
