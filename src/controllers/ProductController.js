@@ -8,8 +8,13 @@ class ProductController {
   }
 
   getAll = async (req, res, next) => {
+    const { page } = req.query;
+    const pageNumber = parseInt(page) || 1;
+
     try {
-      const products = await this.productService.findAll();
+      const products = await this.productService.findAll({
+        page: pageNumber,
+      });
       const data = new ResponseDataBuilder()
         .setData(products)
         .setStatus(200)

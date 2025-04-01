@@ -16,14 +16,21 @@ class ProductService {
     });
   }
 
-  async findAll() {
+  async findAll({ page }) {
     return await prisma.product.findMany({
       include: {
+        photos: true,
         lote: {
           include: {
             cafe: true,
           },
         },
+      },
+
+      skip: (page - 1) * 10,
+      take: 10,
+      orderBy: {
+        createdAt: "desc",
       },
     });
   }
@@ -32,6 +39,7 @@ class ProductService {
     return await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
+        photos: true,
         lote: {
           include: {
             cafe: true,

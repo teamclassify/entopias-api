@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Role {
@@ -53,6 +54,10 @@ model Product {
   precio         Float          @default(0.0)
   fechaMolido    DateTime?
   fechaCaducidad DateTime?
+  stock          Int            @default(0)
+  status         Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
 }
 
 model Lote {
@@ -64,10 +69,12 @@ model Lote {
   cafeId       Int
   cafe         Cafe      @relation(fields: [cafeId], references: [id])
   products     Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
 }
 
 model Cafe {
-  id               Int    @id @default(autoincrement())
+  id               Int      @id @default(autoincrement())
   nombre           String
   origen           String
   finca            String
@@ -76,5 +83,7 @@ model Cafe {
   proceso          String
   notasOlfativas   String
   lotes            Lote[]
-  precioGranoVerde Float  @default(0.0)
+  precioGranoVerde Float    @default(0.0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
 }
