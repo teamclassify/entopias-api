@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../config/prisma.js";
 
 class ProductService {
   constructor() {}
 
   async find(where) {
-    return await this.prisma.product.findMany({
+    return await prisma.product.findMany({
       where,
       include: {
         lote: {
@@ -17,19 +17,7 @@ class ProductService {
   }
 
   async findAll() {
-    return await this.prisma.product.findMany({
-      include: {
-        lote: {
-          include: {
-            cafe: true,
-          },
-        },
-      },
-    });
-  }
-
-  async findAll() {
-    return await this.prisma.product.findMany({
+    return await prisma.product.findMany({
       include: {
         lote: {
           include: {
@@ -41,8 +29,8 @@ class ProductService {
   }
 
   async findOne(id) {
-    return await this.prisma.product.findUnique({
-      where: { id: id },
+    return await prisma.product.findUnique({
+      where: { id: Number(id) },
       include: {
         lote: {
           include: {
@@ -54,7 +42,7 @@ class ProductService {
   }
 
   async create(data) {
-    return await this.prisma.product.create({
+    return await prisma.product.create({
       data,
       include: {
         lote: {
@@ -67,7 +55,7 @@ class ProductService {
   }
 
   async update(id, data) {
-    return await this.prisma.product.update({
+    return await prisma.product.update({
       where: { id: id },
       data,
       include: {
@@ -81,7 +69,7 @@ class ProductService {
   }
 
   async delete(id) {
-    return await this.prisma.product.delete({
+    return await prisma.product.delete({
       where: { id: id },
     });
   }
