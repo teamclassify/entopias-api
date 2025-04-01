@@ -43,6 +43,8 @@ model Product {
   loteId      Int
   lote        Lote   @relation(fields: [loteId], references: [id])
   //photos        ProductPhoto[]
+  fechaMolido DateTime?
+  fechaCaducidad DateTime?
 }
 
 model Lote {
@@ -66,4 +68,5 @@ model Cafe {
   proceso        String
   notasOlfativas String
   lotes          Lote[]
+  precioGranoVerde Float @default (0.0)
 }
