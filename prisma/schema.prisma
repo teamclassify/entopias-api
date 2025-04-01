@@ -36,14 +36,21 @@ model UsersOnRoles {
   @@id([userId, roleId])
 }
 
+model ProductPhoto {
+  id        Int     @id @default(autoincrement())
+  url       String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+}
+
 model Product {
-  id             Int       @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   name           String
   descripcion    String
   loteId         Int
-  lote           Lote      @relation(fields: [loteId], references: [id])
-  //photos        ProductPhoto[]
-  precio         Float     @default(0.0)
+  lote           Lote           @relation(fields: [loteId], references: [id])
+  photos         ProductPhoto[]
+  precio         Float          @default(0.0)
   fechaMolido    DateTime?
   fechaCaducidad DateTime?
 }
