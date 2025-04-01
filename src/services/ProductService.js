@@ -19,6 +19,7 @@ class ProductService {
   async findAll({ page }) {
     return await prisma.product.findMany({
       include: {
+        photos: true,
         lote: {
           include: {
             cafe: true,
@@ -38,6 +39,7 @@ class ProductService {
     return await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
+        photos: true,
         lote: {
           include: {
             cafe: true,
