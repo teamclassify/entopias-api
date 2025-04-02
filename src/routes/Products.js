@@ -13,20 +13,24 @@ productRouter.get("/:id", controller.getOne);
 
 productRouter.post(
   "/",
+
   verifyToken,
   isSalesOrAdmin,
-  body("name").notEmpty().withMessage("El nombre es obligatorio"),
-  body("descripcion").notEmpty().withMessage("La descripción es obligatoria"),
-  body("loteId")
-    .isInt()
-    .withMessage("El ID del lote debe ser un número entero"),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
+
+  [
+    body("name").notEmpty().withMessage("El nombre es obligatorio"),
+    body("descripcion").notEmpty().withMessage("La descripción es obligatoria"),
+    body("precio")
+      .isFloat({ gt: 0 })
+      .withMessage("El precio debe ser un número mayor a 0"),
+    body("stock")
+      .isInt({ gt: 0 })
+      .withMessage("El stock debe ser un número entero mayor a 0"),
+    body("loteId")
+      .isInt()
+      .withMessage("El ID del lote debe ser un número entero"),
+  ],
+
   controller.create
 );
 
