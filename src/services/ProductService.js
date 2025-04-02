@@ -74,7 +74,13 @@ class ProductService {
     return await prisma.product.update({
       where: { id: Number(id) },
 
-      data,
+      data: {
+        name: data.name,
+        decripcion: data.decripcion,
+        precio: data.precio,
+        stock: data.stock,
+        status: data.status,
+      },
 
       include: {
         lote: {
