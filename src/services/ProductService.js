@@ -3,6 +3,12 @@ import prisma from "../config/prisma.js";
 class ProductService {
   constructor() {}
 
+  async countAll(where) {
+    return await prisma.product.count({
+      where,
+    });
+  }
+
   async find(where) {
     return await prisma.product.findMany({
       where,

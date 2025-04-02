@@ -15,8 +15,13 @@ class ProductController {
       const products = await this.productService.findAll({
         page: pageNumber,
       });
+      const count = await this.productService.countAll();
+
       const data = new ResponseDataBuilder()
-        .setData(products)
+        .setData({
+          products,
+          count,
+        })
         .setStatus(200)
         .setMsg("Products retrieved successfully")
         .build();
