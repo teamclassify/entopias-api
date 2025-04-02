@@ -4,7 +4,7 @@ import validateBody from "../validators/validator.js";
 
 class UserController {
   static async getAllUsers(req, res, next) {
-    const { page, role } = req.query;
+    const { page, role, search } = req.query;
 
     const where = {};
 
@@ -49,6 +49,13 @@ class UserController {
           },
         };
       }
+    }
+
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: "insensitive",
+      };
     }
 
     try {
