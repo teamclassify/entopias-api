@@ -8,14 +8,26 @@ class ProductController {
   }
 
   getAll = async (req, res, next) => {
-    const { page } = req.query;
+    const { page, search } = req.query;
     const pageNumber = parseInt(page) || 1;
+
+    const where = {};
+
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: "insensitive",
+      };
+    }
 
     try {
       const products = await this.productService.findAll({
         page: pageNumber,
+        where,
       });
-      const count = await this.productService.countAll();
+      const count = await this.productService.countAll({
+        where,
+      });
 
       const data = new ResponseDataBuilder()
         .setData({
