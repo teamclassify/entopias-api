@@ -3,13 +3,13 @@ import prisma from "../config/prisma.js";
 class ProductService {
   constructor() {}
 
-  async countAll(where) {
+  async countAll({ where }) {
     return await prisma.product.count({
       where,
     });
   }
 
-  async find(where) {
+  async find({ where }) {
     return await prisma.product.findMany({
       where,
       include: {
@@ -22,8 +22,10 @@ class ProductService {
     });
   }
 
-  async findAll({ page }) {
+  async findAll({ page, where }) {
     return await prisma.product.findMany({
+      where,
+
       include: {
         photos: true,
         lote: {
