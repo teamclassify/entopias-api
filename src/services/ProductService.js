@@ -59,7 +59,19 @@ class ProductService {
 
   async create(data) {
     return await prisma.product.create({
-      data,
+      data: {
+        name: data.name,
+        descripcion: data.descripcion,
+        precio: data.precio,
+        stock: data.stock,
+
+        lote: {
+          connect: {
+            id: Number(data.loteId),
+          },
+        },
+      },
+
       include: {
         lote: {
           include: {
