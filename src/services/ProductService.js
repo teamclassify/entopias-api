@@ -72,8 +72,10 @@ class ProductService {
 
   async update(id, data) {
     return await prisma.product.update({
-      where: { id: id },
+      where: { id: Number(id) },
+
       data,
+
       include: {
         lote: {
           include: {

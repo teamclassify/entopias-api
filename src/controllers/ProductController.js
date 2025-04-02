@@ -86,11 +86,14 @@ class ProductController {
 
   update = async (req, res, next) => {
     const { id } = req.params;
+
     if (validateBody(req, res)) {
       return;
     }
+
     try {
       const updatedProduct = await this.productService.update(id, req.body);
+
       const data = updatedProduct
         ? new ResponseDataBuilder()
             .setData(updatedProduct)
