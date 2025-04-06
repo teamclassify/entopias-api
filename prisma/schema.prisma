@@ -38,35 +38,55 @@ model UsersOnRoles {
 
 model Product {
   id          Int    @id @default(autoincrement())
-  name        String
+  nombre      String
   descripcion String
-  loteId      Int
-  lote        Lote   @relation(fields: [loteId], references: [id])
-  //photos        ProductPhoto[]
-  fechaMolido DateTime?
-  fechaCaducidad DateTime?
+  tipo        String
+  //relaciones
+  lotes       Lote[]  
+  photos      ProductPhoto[]
+  variedades  Variedad[]
+}
+
+model ProductPhoto{
+  id         Int      @id @default(autoincrement())
+  value      String
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])  
 }
 
 model Lote {
-  id           Int       @id @default(autoincrement())
-  pesoCafe     Float
-  tipoTueste   String
-  fechaTostado DateTime
-  fechaLote    DateTime
-  cafeId       Int
-  cafe         Cafe      @relation(fields: [cafeId], references: [id])
-  products     Product[]
+  id                   Int        @id @default(autoincrement())
+  id_product           Int
+  id_productor         Int
+  peso_comprado        Float
+  peso_final           Float
+  fecha_tostado        DateTime
+  tipo_tostado         String
+  notas_olfativas      String
+  fecha_caducidad      DateTime
+  precio_compra_grano  Float?     // Opcional
+
+  // Relaciones:
+  product   Product   @relation(fields: [id_product], references: [id])
+  productor Productor @relation(fields: [id_productor], references: [id])
 }
 
-model Cafe {
-  id             Int    @id @default(autoincrement())
-  nombre         String
-  origen         String
-  finca          String
-  productor      String
-  cantidad       Float
-  proceso        String
-  notasOlfativas String
-  lotes          Lote[]
-  precioGranoVerde Float @default (0.0)
+model Productor {
+  id         Int       @id @default(autoincrement())
+  nombre     String
+  finca      String?   // Opcional
+  direccion  String?   // Opcional
+  telefono   String
+  ciudad     String
+  pais       String
+  lotes      Lote[]
+}
+
+model Variedad {
+  id         Int      @id @default(autoincrement())
+  stock      Int
+  peso       Float
+  precio     Float
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id])
 }
