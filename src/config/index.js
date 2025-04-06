@@ -31,4 +31,16 @@ const FIREBASE = {
   universe_domain: "googleapis.com",
 };
 
-export { MODE, PAGINATION_LIMIT, PORT, URL_FRONT, FIREBASE, EMAIL };
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+
+export {
+  MODE,
+  PAGINATION_LIMIT,
+  PORT,
+  URL_FRONT,
+  FIREBASE,
+  EMAIL,
+  SUPABASE_URL,
+  SUPABASE_KEY,
+};
