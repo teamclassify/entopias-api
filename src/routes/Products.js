@@ -1,12 +1,15 @@
 import express from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
+import multer from "multer";
 
 import ProductController from "../controllers/ProductController.js";
-import verifyToken from "../middlewares/verifyToken.js";
 import { isAdmin, isSalesOrAdmin } from "../middlewares/rbac.js";
+import verifyToken from "../middlewares/verifyToken.js";
+import { generateUUID } from "../utils/generateUUID.js";
 
 const productRouter = express.Router();
 const controller = new ProductController();
+const upload = multer({});
 
 productRouter.get("/", controller.getAll);
 productRouter.get("/:id", controller.getOne);
@@ -16,6 +19,8 @@ productRouter.post(
 
   verifyToken,
   isSalesOrAdmin,
+
+  upload.array("photos", 5, "No se puede subir más de 5 fotos"),
 
   [
     body("name").notEmpty().withMessage("El nombre es obligatorio"),
