@@ -70,8 +70,19 @@ class ProductController {
     if (validateBody(req, res)) {
       return;
     }
+
     try {
-      const product = await this.productService.create(req.body);
+      const photos = await this.productService.uploadPhotos(req.files);
+
+      const product = await this.productService.create({
+        ...req.body,
+        photos: photos.map((photo) => {
+          return {
+            url: `${process.env.SUPABASE_URL}/storage/v1/object/public/${photo.fullPath}`,
+          };
+        }),
+      });
+
       const data = new ResponseDataBuilder()
         .setData(product)
         .setStatus(201)
@@ -114,8 +125,10 @@ class ProductController {
 
   delete = async (req, res, next) => {
     const { id } = req.params;
+
     try {
       const deleted = await this.productService.delete(id);
+
       const data = deleted
         ? new ResponseDataBuilder()
             .setData(null)

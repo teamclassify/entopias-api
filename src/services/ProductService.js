@@ -1,4 +1,6 @@
 import prisma from "../config/prisma.js";
+import { uploadFile } from "../config/supabase.js";
+import { generateUUID } from "../utils/generateUUID.js";
 
 class ProductService {
   constructor() {}
@@ -58,12 +60,21 @@ class ProductService {
   }
 
   async create(data) {
+    console.log(data);
+
     return await prisma.product.create({
       data: {
         name: data.name,
         descripcion: data.descripcion,
-        precio: data.precio,
-        stock: data.stock,
+        precio: Number(data.precio),
+        stock: Number(data.stock),
+
+        photos: {
+          create: data.photos.map((photo) => ({
+            url: photo.url,
+            name: photo.name,
+          })),
+        },
 
         lote: {
           connect: {
@@ -108,6 +119,21 @@ class ProductService {
     return await prisma.product.delete({
       where: { id: id },
     });
+  }
+
+  async uploadPhotos(photos) {
+    const files = await Promise.all(
+      photos.map(async (photo) => {
+        const file = await uploadFile(
+          "products",
+          photo,
+          `${generateUUID()}.${photo.originalname}`
+        );
+        return file;
+      })
+    );
+
+    return files;
   }
 }
 

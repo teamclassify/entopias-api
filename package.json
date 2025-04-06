@@ -14,14 +14,17 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^6.5.0",
+    "@supabase/supabase-js": "^2.49.4",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "firebase-admin": "^13.2.0",
+    "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "dotenv": "^16.4.7",
