@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import { uploadFile } from "../config/supabase.js";
+import { deleteFile, uploadFile } from "../config/supabase.js";
 import { generateUUID } from "../utils/generateUUID.js";
 
 class ProductService {
@@ -109,6 +109,7 @@ class ProductService {
     );
 
     if (photosToDelete.length > 0) {
+      // Delete the photos from the database
       await prisma.productPhoto.deleteMany({
         where: {
           url: {
@@ -116,6 +117,19 @@ class ProductService {
           },
         },
       });
+
+      // Delete the files from Supabase
+      await Promise.all(
+        photosToDelete.map(async (photo) => {
+          await deleteFile(
+            "products",
+            photo.url.replace(
+              `${process.env.SUPABASE_URL}/storage/v1/object/public/products/public/`,
+              ""
+            )
+          );
+        })
+      );
     }
 
     return await prisma.product.update({
