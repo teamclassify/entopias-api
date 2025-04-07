@@ -102,8 +102,6 @@ class ProductController {
       return;
     }
 
-    console.log(req.files);
-
     try {
       const photosFiles = await this.productService.uploadPhotos(req.files);
       const { photos } = req.body;
@@ -116,11 +114,13 @@ class ProductController {
           };
         })
         .concat(
-          photosArray.map((photo) => {
-            return {
-              url: photo,
-            };
-          })
+          photosArray
+            .filter((photo) => photo !== undefined)
+            .map((photo) => {
+              return {
+                url: photo,
+              };
+            })
         );
 
       const updatedProduct = await this.productService.update(id, {
