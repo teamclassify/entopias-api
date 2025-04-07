@@ -23,19 +23,17 @@ productRouter.post(
   upload.array("photos", 5, "No se puede subir más de 5 fotos"),
 
   [
-    body("name").notEmpty().withMessage("El nombre es obligatorio"),
+    body("nombre").notEmpty().withMessage("El nombre es obligatorio"),
     body("descripcion").notEmpty().withMessage("La descripción es obligatoria"),
-    body("precio")
-      .isFloat({ gt: 0 })
-      .withMessage("El precio debe ser un número mayor a 0"),
-    body("stock")
-      .isInt({ gt: 0 })
-      .withMessage("El stock debe ser un número entero mayor a 0"),
-    body("loteId")
-      .isInt()
-      .withMessage("El ID del lote debe ser un número entero"),
+    body("tipo").notEmpty().withMessage("El tipo es obligatorio"),
   ],
-
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
   controller.create
 );
 
@@ -46,23 +44,26 @@ productRouter.put(
   isSalesOrAdmin,
 
   [
-    body("name")
-      .optional()
-      .notEmpty()
-      .withMessage("El nombre no puede estar vacío"),
-    body("descripcion")
-      .optional()
-      .notEmpty()
-      .withMessage("La descripción no puede estar vacía"),
-    body("status")
-      .optional()
-      .isBoolean()
-      .withMessage("El estado debe ser un valor booleano"),
-    body("photos")
-      .optional()
-      .isArray()
-      .withMessage("Las fotos deben ser un array de strings"),
+    body("nombre")
+    .optional()
+    .notEmpty()
+    .withMessage("El nombre, si se envía, no puede estar vacío"),
+  body("descripcion")
+    .optional()
+    .notEmpty()
+    .withMessage("La descripción, si se envía, no puede estar vacía"),
+  body("tipo")
+    .optional()
+    .notEmpty()
+    .withMessage("El tipo, si se envía, no puede estar vacío"),
   ],
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
 
   controller.update
 );

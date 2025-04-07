@@ -5,24 +5,30 @@ class LoteService {
   async create(data) {
     return await prisma.lote.create({
       data,
-      include: { cafe: true },
+      include: {
+        products: true,
+        productor: true,
+      },
     });
   }
 
   async find(where) {
-    const cafes = await prisma.cafe.findMany({
+    const lotes = await prisma.lote.findMany({
       where,
-      include: { cafe: true },
+      include: {
+        product: true,
+        productor: true,
+      },
     });
-    return cafes;
+    return lotes;
   }
 
   async findAll({ page = 1, where }) {
     return await prisma.lote.findMany({
-      where,
-
-      include: { cafe: true },
-
+      include: { 
+        product: true, 
+        productor: true,
+      },
       skip: (page - 1) * 10,
       take: 10,
       orderBy: {
@@ -34,7 +40,10 @@ class LoteService {
   async findOne(id) {
     return await prisma.lote.findUnique({
       where: { id },
-      include: { cafe: true },
+      include: { 
+        product: true, 
+        productor: true,
+      },
     });
   }
 
@@ -42,7 +51,10 @@ class LoteService {
     return await prisma.lote.update({
       where: { id },
       data,
-      include: { cafe: true },
+      include: { 
+        product: true, 
+        productor: true,
+      },
     });
   }
 

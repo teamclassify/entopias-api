@@ -15,19 +15,24 @@ loteRouter.post(
   "/",
   verifyToken,
   isSalesOrAdmin,
-  body("pesoCafe")
-    .isFloat({ gt: 0 })
-    .withMessage("El peso del café debe ser un número mayor a 0"),
-  body("tipoTueste").notEmpty().withMessage("El tipo de tueste es obligatorio"),
-  body("fechaTostado")
-    .isISO8601()
-    .withMessage("La fecha de tostado debe ser válida"),
-  body("fechaLote")
-    .isISO8601()
-    .withMessage("La fecha del lote debe ser válida"),
-  body("cafeId")
-    .isInt({ gt: 0 })
-    .withMessage("El ID del café debe ser un número entero positivo"),
+  body("peso_comprado")
+      .isFloat({ gt: 0 })
+      .withMessage("El peso comprado debe ser un número mayor a 0"),
+    body("peso_final")
+      .isFloat({ gt: 0 })
+      .withMessage("El peso final debe ser un número mayor a 0"),
+    body("fecha_tostado")
+      .isISO8601()
+      .withMessage("La fecha de tostado debe ser una fecha válida"),
+    body("tipo_tostado")
+      .notEmpty()
+      .withMessage("El tipo de tueste es obligatorio"),
+    body("notas_olfativas")
+      .notEmpty()
+      .withMessage("Las notas olfativas son obligatorias"),
+    body("fecha_caducidad")
+      .isISO8601()
+      .withMessage("La fecha de caducidad debe ser una fecha válida"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -45,26 +50,42 @@ loteRouter.post(
   body("id")
     .isInt({ gt: 0 })
     .withMessage("El ID es obligatorio y debe ser un número entero positivo"),
-  body("pesoCafe")
-    .optional()
-    .isFloat({ gt: 0 })
-    .withMessage("El peso del café debe ser mayor a 0"),
-  body("tipoTueste")
-    .optional()
-    .notEmpty()
-    .withMessage("El tipo de tueste no puede estar vacío"),
-  body("fechaTostado")
-    .optional()
-    .isISO8601()
-    .withMessage("La fecha de tostado debe ser válida"),
-  body("fechaLote")
-    .optional()
-    .isISO8601()
-    .withMessage("La fecha del lote debe ser válida"),
-  body("cafeId")
+  body("id_product")
     .optional()
     .isInt({ gt: 0 })
-    .withMessage("El ID del café debe ser un número entero positivo"),
+    .withMessage("El ID del producto, si se envía, debe ser un número entero positivo"),
+  body("id_productor")
+    .optional()
+    .isInt({ gt: 0 })
+    .withMessage("El ID del productor, si se envía, debe ser un número entero positivo"),
+  body("peso_comprado")
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage("El peso comprado, si se envía, debe ser un número mayor a 0"),
+  body("peso_final")
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage("El peso final, si se envía, debe ser un número mayor a 0"),
+  body("fecha_tostado")
+    .optional()
+    .isISO8601()
+    .withMessage("La fecha de tostado, si se envía, debe ser válida"),
+  body("tipo_tostado")
+    .optional()
+    .notEmpty()
+    .withMessage("El tipo de tueste, si se envía, no puede estar vacío"),
+  body("notas_olfativas")
+    .optional()
+    .notEmpty()
+    .withMessage("Las notas olfativas, si se envían, no pueden estar vacías"),
+  body("fecha_caducidad")
+    .optional()
+    .isISO8601()
+    .withMessage("La fecha de caducidad, si se envía, debe ser válida"),
+  body("precio_compra_grano")
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage("El precio de compra del grano, si se envía, debe ser un número mayor a 0"),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

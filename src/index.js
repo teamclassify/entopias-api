@@ -10,6 +10,8 @@ import userRoutes from "./routes/UserRoutes.js";
 import roleRoutes from "./routes/RoleRoutes.js";
 import cafeRouter from "./routes/Cafes.js";
 import lotesRouter from "./routes/Lotes.js";
+import productorRouter from "./routes/Productor.js";
+import VariedadRouter from "./routes/Variedades.js";
 
 const app = express();
 
@@ -38,6 +40,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/cafes", cafeRouter);
 app.use("/api/lotes", lotesRouter);
+app.use("/api/productores",productorRouter);
+app.use("/api/variedades",VariedadRouter);
 
 app.use(handleErrors);
 

@@ -11,32 +11,33 @@ class ProductService {
     });
   }
 
-  async find({ where }) {
+  async find({ where } = {}) {
     return await prisma.product.findMany({
       where,
       include: {
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }
 
-  async findAll({ page, where }) {
+  async findAll({ page = 1, where } = {}) {
     return await prisma.product.findMany({
       where,
-
       include: {
-        photos: true,
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
-
       skip: (page - 1) * 10,
       take: 10,
       orderBy: {
@@ -49,12 +50,13 @@ class ProductService {
     return await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
-        photos: true,
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }
@@ -64,31 +66,24 @@ class ProductService {
 
     return await prisma.product.create({
       data: {
-        name: data.name,
+        nombre: data.nombre,
         descripcion: data.descripcion,
-        precio: Number(data.precio),
-        stock: Number(data.stock),
-
+        tipo: data.tipo,
         photos: {
           create: data.photos.map((photo) => ({
             url: photo.url,
             name: photo.name,
           })),
         },
-
-        lote: {
-          connect: {
-            id: Number(data.loteId),
-          },
-        },
       },
-
       include: {
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor:true,
           },
         },
+        photos:true,
+        variedades:true,
       },
     });
   }
@@ -96,21 +91,19 @@ class ProductService {
   async update(id, data) {
     return await prisma.product.update({
       where: { id: Number(id) },
-
       data: {
-        name: data.name,
-        decripcion: data.decripcion,
-        precio: data.precio,
-        stock: data.stock,
-        status: data.status,
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        tipo: data.tipo,
       },
-
       include: {
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }

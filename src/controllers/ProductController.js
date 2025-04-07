@@ -10,11 +10,11 @@ class ProductController {
   getAll = async (req, res, next) => {
     const { page, search } = req.query;
     const pageNumber = parseInt(page) || 1;
-
     const where = {};
 
     if (search) {
-      where.name = {
+      // el campo "nombre" es el que esta en el modelo
+      where.nombre = {
         contains: search,
         mode: "insensitive",
       };
@@ -25,10 +25,7 @@ class ProductController {
         page: pageNumber,
         where,
       });
-      const count = await this.productService.countAll({
-        where,
-      });
-
+      const count = await this.productService.countAll({ where });
       const data = new ResponseDataBuilder()
         .setData({
           products,
