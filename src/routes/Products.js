@@ -1,6 +1,5 @@
 import express from "express";
 import { body, validationResult } from "express-validator";
-
 import ProductController from "../controllers/ProductController.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import { isAdmin, isSalesOrAdmin } from "../middlewares/rbac.js";
@@ -17,7 +16,7 @@ productRouter.post(
     isSalesOrAdmin,
     body("name").notEmpty().withMessage("El nombre es obligatorio"),
     body("descripcion").notEmpty().withMessage("La descripción es obligatoria"),
-    body("loteId").isInt().withMessage("El ID del lote debe ser un número entero"),
+    body("tipo").notEmpty().withMessage("El tipo es obligatorio."),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -29,13 +28,23 @@ productRouter.post(
 );
 
 productRouter.post(
-    "/update",
+    "/:id",
     verifyToken,
     isSalesOrAdmin,
-    body("id").notEmpty().withMessage("El ID es obligatorio"),
-    body("name").optional().notEmpty().withMessage("El nombre no puede estar vacío"),
-    body("descripcion").optional().notEmpty().withMessage("La descripción no puede estar vacía"),
-    body("loteId").optional().isInt().withMessage("El ID del lote debe ser un número entero"),
+    [
+        body("nombre")
+        .optional()
+        .notEmpty()
+        .withMessage("El nombre, si se envía, no puede estar vacío."),
+      body("descripcion")
+        .optional()
+        .notEmpty()
+        .withMessage("La descripción, si se envía, no puede estar vacía."),
+      body("tipo")
+        .optional()
+        .notEmpty()
+        .withMessage("El tipo, si se envía, no puede estar vacío."), 
+    ],
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

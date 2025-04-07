@@ -1,4 +1,4 @@
-import prisma from "../config/prisma.js";
+import prisma from "../config/prisma";
 
 class ProductService {
   constructor() {}
@@ -7,30 +7,27 @@ class ProductService {
     return await prisma.product.findMany({
       where,
       include: {
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true, // Incluye los datos del productor asociado a cada lote
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }
 
-  async findAll({ page }) {
+  async findAll() {
     return await prisma.product.findMany({
       include: {
-        photos: true,
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
-      },
-
-      skip: (page - 1) * 10,
-      take: 10,
-      orderBy: {
-        createdAt: "desc",
+        photos: true,
+        variedades: true,
       },
     });
   }
@@ -39,12 +36,13 @@ class ProductService {
     return await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
-        photos: true,
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }
@@ -53,32 +51,36 @@ class ProductService {
     return await prisma.product.create({
       data,
       include: {
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }
 
   async update(id, data) {
     return await prisma.product.update({
-      where: { id: id },
+      where: { id: Number(id) },
       data,
       include: {
-        lote: {
+        lotes: {
           include: {
-            cafe: true,
+            productor: true,
           },
         },
+        photos: true,
+        variedades: true,
       },
     });
   }
 
   async delete(id) {
     return await prisma.product.delete({
-      where: { id: id },
+      where: { id: Number(id) },
     });
   }
 }
