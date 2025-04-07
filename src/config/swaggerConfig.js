@@ -15,15 +15,14 @@ const options = {
       },
     ],
   },
-  apis: ["src/routes/*.js"], 
+  apis: ["src/routes/*.js"],
 };
-
 
 const swaggerSpec = swaggerJsdoc(options);
 
 function swaggerDocs(app, port) {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  console.log(`Swagger disponible en http://localhost:${port}/api-docs`);
+  // console.log(`Swagger disponible en http://localhost:${port}/api-docs`);
 }
 
 export default swaggerDocs;
