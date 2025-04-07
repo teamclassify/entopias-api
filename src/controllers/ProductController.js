@@ -107,15 +107,21 @@ class ProductController {
     try {
       const photosFiles = await this.productService.uploadPhotos(req.files);
       const { photos } = req.body;
+      const photosArray = Array.isArray(photos) ? photos : [photos];
 
-      console.log(photosFiles);
-      console.log(req.body);
-
-      const photosToAdd = photosFiles.map((photo) => {
-        return {
-          url: `${process.env.SUPABASE_URL}/storage/v1/object/public/${photo.fullPath}`,
-        };
-      });
+      const photosToAdd = photosFiles
+        .map((photo) => {
+          return {
+            url: `${process.env.SUPABASE_URL}/storage/v1/object/public/${photo.fullPath}`,
+          };
+        })
+        .concat(
+          photosArray.map((photo) => {
+            return {
+              url: photo,
+            };
+          })
+        );
 
       const updatedProduct = await this.productService.update(id, {
         ...req.body,
