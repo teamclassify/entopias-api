@@ -102,8 +102,25 @@ class ProductController {
       return;
     }
 
+    console.log(req.files);
+
     try {
-      const updatedProduct = await this.productService.update(id, req.body);
+      const photosFiles = await this.productService.uploadPhotos(req.files);
+      const { photos } = req.body;
+
+      console.log(photosFiles);
+      console.log(req.body);
+
+      const photosToAdd = photosFiles.map((photo) => {
+        return {
+          url: `${process.env.SUPABASE_URL}/storage/v1/object/public/${photo.fullPath}`,
+        };
+      });
+
+      const updatedProduct = await this.productService.update(id, {
+        ...req.body,
+        photos: photosToAdd,
+      });
 
       const data = updatedProduct
         ? new ResponseDataBuilder()

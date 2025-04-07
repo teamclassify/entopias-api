@@ -94,15 +94,45 @@ class ProductService {
   }
 
   async update(id, data) {
+    const photos = await prisma.productPhoto.findMany({
+      where: {
+        productId: Number(id),
+      },
+    });
+
+    const photosToDelete = photos.filter(
+      (photo) => !data.photos.some((p) => p.url === photo.url)
+    );
+
+    const newPhotos = data.photos.filter(
+      (photo) => !photos.some((p) => p.url === photo.url)
+    );
+
+    if (photosToDelete.length > 0) {
+      await prisma.productPhoto.deleteMany({
+        where: {
+          url: {
+            in: photosToDelete.map((photo) => photo.url),
+          },
+        },
+      });
+    }
+
     return await prisma.product.update({
       where: { id: Number(id) },
 
       data: {
         name: data.name,
         decripcion: data.decripcion,
-        precio: data.precio,
-        stock: data.stock,
-        status: data.status,
+        precio: Number(data.precio),
+        stock: Number(data.stock),
+        status: Boolean(data.status),
+
+        photos: {
+          create: newPhotos.map((photo) => ({
+            url: photo.url,
+          })),
+        },
       },
 
       include: {
