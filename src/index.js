@@ -11,6 +11,8 @@ import roleRoutes from "./routes/RoleRoutes.js";
 import cafeRouter from "./routes/Cafes.js";
 import lotesRouter from "./routes/Lotes.js"
 import productorRouter from "./routes/ProductorRoutes.js";
+import variedadRoutes from "./routes/Variedades.js";
+
 
 const app = express();
 
@@ -39,6 +41,7 @@ app.use("/api/roles",roleRoutes);
 app.use("/api/cafes", cafeRouter);
 app.use("/api/lotes", lotesRouter);
 app.use("/api/productores",productorRouter);
+app.use("/api/variedades",variedadRoutes);
 
 app.use(handleErrors);
 
