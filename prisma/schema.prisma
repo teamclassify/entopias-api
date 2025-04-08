@@ -47,43 +47,51 @@ model ProductPhoto {
 model Product {
   id             Int            @id @default(autoincrement())
   name           String
-  descripcion    String
-  loteId         Int
-  lote           Lote           @relation(fields: [loteId], references: [id])
+  description    String
+  type           String
   photos         ProductPhoto[]
-  precio         Float          @default(0.0)
-  fechaMolido    DateTime?
-  fechaCaducidad DateTime?
-  stock          Int            @default(0)
-  status         Boolean        @default(true)
+  varieties      Variety[]
+  batches        Batch[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @default(now()) @updatedAt
 }
 
-model Lote {
-  id           Int       @id @default(autoincrement())
-  pesoCafe     Float
-  tipoTueste   String
-  fechaTostado DateTime
-  fechaLote    DateTime
-  cafeId       Int
-  cafe         Cafe      @relation(fields: [cafeId], references: [id])
-  products     Product[]
+model Batch {
+  id                  Int       @id @default(autoincrement())
+  productId           Int
+  producerId          Int
+  initialWeight       Float
+  finalWeight         String
+  roastedDate         DateTime
+  roastedType         DateTime
+  aromaticNotes       String
+  expirationDate      DateTime 
+  purchasePrice       Float?
+
+  product             Product   @relation(fields: [productId], references: [id])
+  producer            Producer  @relation(fields: [producerId], references: [id])
+  
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @default(now()) @updatedAt
 }
 
-model Cafe {
-  id               Int      @id @default(autoincrement())
-  nombre           String
-  origen           String
-  finca            String
-  productor        String
-  cantidad         Float
-  proceso          String
-  notasOlfativas   String
-  lotes            Lote[]
-  precioGranoVerde Float    @default(0.0)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now()) @updatedAt
+model Producer {
+  id      Int      @id @default(autoincrement())
+  name    String
+  email   String
+  phone   String
+  country String
+  state   String
+  farm    String
+
+  batches Batch[]  
+}
+
+model Variety {
+  id          Int     @id @default(autoincrement())
+  stock       Int
+  weight      Float
+  price       Float
+  productId   Int
+  product     Product @relation(fields: [productId], references: [id])
 }
