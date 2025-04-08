@@ -39,11 +39,13 @@ productRouter.post(
   controller.create
 );
 
-productRouter.put(
+productRouter.post(
   "/:id",
 
   verifyToken,
   isSalesOrAdmin,
+
+  upload.array("newphotos", 5, "No se puede subir más de 5 fotos"),
 
   [
     body("name")
@@ -58,10 +60,6 @@ productRouter.put(
       .optional()
       .isBoolean()
       .withMessage("El estado debe ser un valor booleano"),
-    body("photos")
-      .optional()
-      .isArray()
-      .withMessage("Las fotos deben ser un array de strings"),
   ],
 
   controller.update

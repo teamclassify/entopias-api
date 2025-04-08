@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import { uploadFile } from "../config/supabase.js";
+import { deleteFile, uploadFile } from "../config/supabase.js";
 import { generateUUID } from "../utils/generateUUID.js";
 
 class ProductService {
@@ -30,11 +30,13 @@ class ProductService {
 
       include: {
         photos: true,
-        lote: {
+
+        varieties: true,
+        batches: {
           include: {
-            cafe: true,
-          },
-        },
+            producer: true
+          }
+        }
       },
 
       skip: (page - 1) * 10,
@@ -50,24 +52,21 @@ class ProductService {
       where: { id: Number(id) },
       include: {
         photos: true,
-        lote: {
+        varieties: true,
+        batches: {
           include: {
-            cafe: true,
-          },
-        },
+            producer: true
+          }
+        }
       },
     });
   }
 
   async create(data) {
-    console.log(data);
-
     return await prisma.product.create({
       data: {
         name: data.name,
-        descripcion: data.descripcion,
-        precio: Number(data.precio),
-        stock: Number(data.stock),
+        description: data.descripcion,
 
         photos: {
           create: data.photos.map((photo) => ({
@@ -76,7 +75,7 @@ class ProductService {
           })),
         },
 
-        lote: {
+        batches: {
           connect: {
             id: Number(data.loteId),
           },
@@ -84,9 +83,9 @@ class ProductService {
       },
 
       include: {
-        lote: {
+        batches: {
           include: {
-            cafe: true,
+            producer: true,
           },
         },
       },
@@ -94,21 +93,63 @@ class ProductService {
   }
 
   async update(id, data) {
+    const photos = await prisma.productPhoto.findMany({
+      where: {
+        productId: Number(id),
+      },
+    });
+
+    const photosToDelete = photos.filter(
+      (photo) => !data.photos.some((p) => p.url === photo.url)
+    );
+
+    const newPhotos = data.photos.filter(
+      (photo) => !photos.some((p) => p.url === photo.url)
+    );
+
+    if (photosToDelete.length > 0) {
+      // Delete the photos from the database
+      await prisma.productPhoto.deleteMany({
+        where: {
+          url: {
+            in: photosToDelete.map((photo) => photo.url),
+          },
+        },
+      });
+
+      // Delete the files from Supabase
+      await Promise.all(
+        photosToDelete.map(async (photo) => {
+          await deleteFile(
+            "products",
+            photo.url.replace(
+              `${process.env.SUPABASE_URL}/storage/v1/object/public/products/public/`,
+              ""
+            )
+          );
+        })
+      );
+    }
+
     return await prisma.product.update({
       where: { id: Number(id) },
 
       data: {
         name: data.name,
-        decripcion: data.decripcion,
-        precio: data.precio,
-        stock: data.stock,
+        description: data.decripcion,
         status: data.status,
+
+        photos: {
+          create: newPhotos.map((photo) => ({
+            url: photo.url,
+          })),
+        },
       },
 
       include: {
-        lote: {
+        batches: {
           include: {
-            cafe: true,
+            producer: true,
           },
         },
       },
