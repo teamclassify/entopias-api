@@ -9,7 +9,9 @@ import productsRouter from "./routes/Products.js";
 import userRoutes from "./routes/UserRoutes.js";
 import roleRoutes from "./routes/RoleRoutes.js";
 import cafeRouter from "./routes/Cafes.js";
-import lotesRouter from "./routes/Lotes.js";
+import batchRouter from "./routes/Batches.js";
+import VarietyRouter from "./routes/Varieties.js";
+import producerRouter from "./routes/Producer.js";
 
 const app = express();
 
@@ -37,7 +39,11 @@ app.use("/api/products", productsRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/cafes", cafeRouter);
-app.use("/api/lotes", lotesRouter);
+app.use("/api/lotes", batchRouter);
+app.use("/api/variedades", VarietyRouter);
+app.use("/api/productores", producerRouter);
+
+
 
 app.use(handleErrors);
 

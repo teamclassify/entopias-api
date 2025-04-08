@@ -1,25 +1,21 @@
 import ResponseDataBuilder from "../models/ResponseData.js";
-import LoteService from "../services/LoteService.js";
+import BatchService from "../services/BatchService.js";
 import validateBody from "../validators/validator.js";
 
-class LoteController {
+class BatchController {
   constructor() {
-    this.loteService = new LoteService();
+    this.batchService = new BatchService();
   }
 
   getAll = async (req, res, next) => {
     const { page = 1 } = req.query;
     const pageNumber = parseInt(page) || 1;
-
     try {
-      const lotes = await this.loteService.findAll({
-        page: pageNumber,
-      });
-
+      const batches = await this.batchService.findAll({ page: pageNumber });
       const data = new ResponseDataBuilder()
-        .setData(lotes)
+        .setData(batches)
         .setStatus(200)
-        .setMsg("Lotes retrieved successfully")
+        .setMsg("Batches retrieved successfully")
         .build();
       res.json(data);
     } catch (err) {
@@ -31,17 +27,17 @@ class LoteController {
   getOne = async (req, res, next) => {
     const { id } = req.params;
     try {
-      const lote = await this.loteService.findOne(Number(id));
-      const data = lote
+      const batch = await this.batchService.findOne(Number(id));
+      const data = batch
         ? new ResponseDataBuilder()
-            .setData(lote)
+            .setData(batch)
             .setStatus(200)
-            .setMsg("Lote found")
+            .setMsg("Batch found")
             .build()
         : new ResponseDataBuilder()
             .setData(null)
             .setStatus(404)
-            .setMsg("Lote not found")
+            .setMsg("Batch not found")
             .build();
       res.json(data);
     } catch (err) {
@@ -51,15 +47,13 @@ class LoteController {
   };
 
   create = async (req, res, next) => {
-    if (validateBody(req, res)) {
-      return;
-    }
+    if (validateBody(req, res)) return;
     try {
-      const lote = await this.loteService.create(req.body);
+      const batch = await this.batchService.create(req.body);
       const data = new ResponseDataBuilder()
-        .setData(lote)
+        .setData(batch)
         .setStatus(201)
-        .setMsg("Lote created successfully")
+        .setMsg("Batch created successfully")
         .build();
       res.status(201).json(data);
     } catch (err) {
@@ -70,21 +64,19 @@ class LoteController {
 
   update = async (req, res, next) => {
     const { id } = req.params;
-    if (validateBody(req, res)) {
-      return;
-    }
+    if (validateBody(req, res)) return;
     try {
-      const updatedLote = await this.loteService.update(Number(id), req.body);
-      const data = updatedLote
+      const updatedBatch = await this.batchService.update(Number(id), req.body);
+      const data = updatedBatch
         ? new ResponseDataBuilder()
-            .setData(updatedLote)
+            .setData(updatedBatch)
             .setStatus(200)
-            .setMsg("Lote updated successfully")
+            .setMsg("Batch updated successfully")
             .build()
         : new ResponseDataBuilder()
             .setData(null)
             .setStatus(404)
-            .setMsg("Lote not found")
+            .setMsg("Batch not found")
             .build();
       res.json(data);
     } catch (err) {
@@ -96,17 +88,17 @@ class LoteController {
   delete = async (req, res, next) => {
     const { id } = req.params;
     try {
-      const deleted = await this.loteService.delete(Number(id));
+      const deleted = await this.batchService.delete(Number(id));
       const data = deleted
         ? new ResponseDataBuilder()
             .setData(null)
             .setStatus(200)
-            .setMsg("Lote deleted successfully")
+            .setMsg("Batch deleted successfully")
             .build()
         : new ResponseDataBuilder()
             .setData(null)
             .setStatus(404)
-            .setMsg("Lote not found")
+            .setMsg("Batch not found")
             .build();
       res.json(data);
     } catch (err) {
@@ -116,4 +108,4 @@ class LoteController {
   };
 }
 
-export default LoteController;
+export default BatchController;
