@@ -30,11 +30,13 @@ class ProductService {
 
       include: {
         photos: true,
-        lote: {
+
+        varieties: true,
+        batches: {
           include: {
-            cafe: true,
-          },
-        },
+            producer: true
+          }
+        }
       },
 
       skip: (page - 1) * 10,
@@ -50,24 +52,21 @@ class ProductService {
       where: { id: Number(id) },
       include: {
         photos: true,
-        lote: {
+        varieties: true,
+        batches: {
           include: {
-            cafe: true,
-          },
-        },
+            producer: true
+          }
+        }
       },
     });
   }
 
   async create(data) {
-    console.log(data);
-
     return await prisma.product.create({
       data: {
         name: data.name,
-        descripcion: data.descripcion,
-        precio: Number(data.precio),
-        stock: Number(data.stock),
+        description: data.descripcion,
 
         photos: {
           create: data.photos.map((photo) => ({
@@ -76,7 +75,7 @@ class ProductService {
           })),
         },
 
-        lote: {
+        batches: {
           connect: {
             id: Number(data.loteId),
           },
@@ -84,9 +83,9 @@ class ProductService {
       },
 
       include: {
-        lote: {
+        batches: {
           include: {
-            cafe: true,
+            producer: true,
           },
         },
       },
@@ -137,10 +136,8 @@ class ProductService {
 
       data: {
         name: data.name,
-        decripcion: data.decripcion,
-        precio: Number(data.precio),
-        stock: Number(data.stock),
-        status: Boolean(data.status),
+        description: data.decripcion,
+        status: data.status,
 
         photos: {
           create: newPhotos.map((photo) => ({
@@ -150,9 +147,9 @@ class ProductService {
       },
 
       include: {
-        lote: {
+        batches: {
           include: {
-            cafe: true,
+            producer: true,
           },
         },
       },
