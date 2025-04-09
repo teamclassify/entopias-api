@@ -5,7 +5,6 @@ import multer from "multer";
 import ProductController from "../controllers/ProductController.js";
 import { isAdmin, isSalesOrAdmin } from "../middlewares/rbac.js";
 import verifyToken from "../middlewares/verifyToken.js";
-import { generateUUID } from "../utils/generateUUID.js";
 
 const productRouter = express.Router();
 const controller = new ProductController();
@@ -24,16 +23,9 @@ productRouter.post(
 
   [
     body("name").notEmpty().withMessage("El nombre es obligatorio"),
-    body("descripcion").notEmpty().withMessage("La descripción es obligatoria"),
-    body("precio")
-      .isFloat({ gt: 0 })
-      .withMessage("El precio debe ser un número mayor a 0"),
-    body("stock")
-      .isInt({ gt: 0 })
-      .withMessage("El stock debe ser un número entero mayor a 0"),
-    body("loteId")
-      .isInt()
-      .withMessage("El ID del lote debe ser un número entero"),
+    body("description").notEmpty().withMessage("La descripción es obligatoria"),
+    body("type").notEmpty().withMessage("El tipo es obligatorio"),
+    body("varieties").notEmpty().withMessage("Las variedades son obligatorias"),
   ],
 
   controller.create
@@ -48,18 +40,17 @@ productRouter.post(
   upload.array("newphotos", 5, "No se puede subir más de 5 fotos"),
 
   [
-    body("name")
-      .optional()
-      .notEmpty()
-      .withMessage("El nombre no puede estar vacío"),
-    body("descripcion")
-      .optional()
+    body("name").notEmpty().withMessage("El nombre no puede estar vacío"),
+    body("description")
       .notEmpty()
       .withMessage("La descripción no puede estar vacía"),
     body("status")
-      .optional()
       .isBoolean()
       .withMessage("El estado debe ser un valor booleano"),
+    body("type").notEmpty().withMessage("El tipo es obligatorio"),
+    body("varieties")
+      .isArray()
+      .withMessage("Las variedades deben ser un array"),
   ],
 
   controller.update

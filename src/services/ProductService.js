@@ -34,9 +34,9 @@ class ProductService {
         varieties: true,
         batches: {
           include: {
-            producer: true
-          }
-        }
+            producer: true,
+          },
+        },
       },
 
       skip: (page - 1) * 10,
@@ -55,9 +55,9 @@ class ProductService {
         varieties: true,
         batches: {
           include: {
-            producer: true
-          }
-        }
+            producer: true,
+          },
+        },
       },
     });
   }
@@ -131,18 +131,65 @@ class ProductService {
       );
     }
 
+    const varieties = data.varieties.map((variety) => JSON.parse(variety));
+
+    // update the varieties that have an id
+    await Promise.all(
+      varieties
+        .filter((variety) => variety.id)
+        .map((variety) =>
+          prisma.variety.update({
+            where: { id: Number(variety.id) },
+            data: {
+              price: Number(variety.price),
+              stock: Number(variety.stock),
+              weight: Number(variety.weight),
+            },
+          })
+        )
+    );
+
+    const varietiesInDB = await prisma.variety.findMany({
+      where: {
+        productId: Number(id),
+      },
+    });
+
+    const varietiesToDelete = varietiesInDB.filter(
+      (variety) => !varieties.some((v) => v.id === variety.id)
+    );
+
+    // delete the varieties that no have in the data
+    await Promise.all(
+      varietiesToDelete.map((variety) =>
+        prisma.variety.delete({
+          where: { id: variety.id },
+        })
+      )
+    );
+
     return await prisma.product.update({
       where: { id: Number(id) },
 
       data: {
         name: data.name,
-        description: data.decripcion,
-        status: data.status,
+        description: data.description,
+        status: Boolean(data.status),
 
         photos: {
           create: newPhotos.map((photo) => ({
             url: photo.url,
           })),
+        },
+
+        varieties: {
+          create: varieties
+            .filter((variety) => !variety.id)
+            .map((variety) => ({
+              price: variety.price,
+              stock: variety.stock,
+              weight: variety.weight,
+            })),
         },
       },
 

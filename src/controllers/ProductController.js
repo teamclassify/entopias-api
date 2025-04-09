@@ -123,6 +123,8 @@ class ProductController {
             })
         );
 
+      console.log(req.body);
+
       const updatedProduct = await this.productService.update(id, {
         ...req.body,
         photos: photosToAdd,
