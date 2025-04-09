@@ -45,38 +45,39 @@ model ProductPhoto {
 }
 
 model Product {
-  id             Int            @id @default(autoincrement())
-  name           String
-  description    String
-  type           String
-  photos         ProductPhoto[]
-  varieties      Variety[]
-  batches        Batch[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @default(now()) @updatedAt
+  id          Int            @id @default(autoincrement())
+  name        String
+  description String
+  type        String
+  photos      ProductPhoto[]
+  status      Boolean        @default(true)
+  varieties   Variety[]
+  batches     Batch[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @default(now()) @updatedAt
 }
 
 model Batch {
-  id                  Int       @id @default(autoincrement())
-  productId           Int
-  producerId          Int
-  initialWeight       Float
-  finalWeight         String
-  roastedDate         DateTime
-  roastedType         DateTime
-  aromaticNotes       String
-  expirationDate      DateTime 
-  purchasePrice       Float?
+  id             Int      @id @default(autoincrement())
+  productId      Int
+  producerId     Int
+  initialWeight  Float
+  finalWeight    String
+  roastedDate    DateTime
+  roastedType    DateTime
+  aromaticNotes  String
+  expirationDate DateTime
+  purchasePrice  Float?
 
-  product             Product   @relation(fields: [productId], references: [id])
-  producer            Producer  @relation(fields: [producerId], references: [id])
-  
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @default(now()) @updatedAt
+  product  Product  @relation(fields: [productId], references: [id])
+  producer Producer @relation(fields: [producerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Producer {
-  id      Int      @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   name    String
   email   String
   phone   String
@@ -84,14 +85,14 @@ model Producer {
   state   String
   farm    String
 
-  batches Batch[]  
+  batches Batch[]
 }
 
 model Variety {
-  id          Int     @id @default(autoincrement())
-  stock       Int
-  weight      Float
-  price       Float
-  productId   Int
-  product     Product @relation(fields: [productId], references: [id])
+  id        Int     @id @default(autoincrement())
+  stock     Int
+  weight    Float
+  price     Float
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
 }
