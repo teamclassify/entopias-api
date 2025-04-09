@@ -1,31 +1,36 @@
 import express from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 import ProducerController from "../controllers/ProducerController.js";
-import verifyToken from "../middlewares/verifyToken.js";
 import { isAdmin } from "../middlewares/rbac.js";
+import verifyToken from "../middlewares/verifyToken.js";
 
 const producerRouter = express.Router();
-
-// Todas las rutas requieren que el usuario sea ADMIN
+const producerController = new ProducerController();
 
 producerRouter.get(
   "/",
+
   verifyToken,
   isAdmin,
-  ProducerController.getAllProducers
+
+  producerController.getAllProducers
 );
 
 producerRouter.get(
   "/:id",
+
   verifyToken,
   isAdmin,
-  ProducerController.getProducerById
+
+  producerController.getProducerById
 );
 
 producerRouter.post(
   "/",
+
   verifyToken,
   isAdmin,
+
   [
     body("name").notEmpty().withMessage("El nombre es requerido"),
     body("email")
@@ -38,20 +43,16 @@ producerRouter.post(
     body("state").notEmpty().withMessage("El estado es requerido"),
     body("farm").notEmpty().withMessage("La finca es requerida"),
   ],
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
-  ProducerController.createProducer
+
+  producerController.createProducer
 );
 
 producerRouter.put(
   "/:id",
+
   verifyToken,
   isAdmin,
+
   [
     body("name")
       .optional()
@@ -78,21 +79,17 @@ producerRouter.put(
       .notEmpty()
       .withMessage("Farm, if provided, cannot be empty."),
   ],
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
-  ProducerController.updateProducer
+
+  producerController.updateProducer
 );
 
 producerRouter.delete(
   "/:id",
+
   verifyToken,
   isAdmin,
-  ProducerController.deleteProducer
+
+  producerController.deleteProducer
 );
 
 export default producerRouter;

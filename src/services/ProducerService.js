@@ -12,7 +12,6 @@ class ProducerService {
     const producers = await prisma.producer.findMany({
       where,
       include: {
-        batches: true, 
         ...include,
       },
       skip: (page - 1) * 10,
@@ -28,7 +27,6 @@ class ProducerService {
     const producer = await prisma.producer.findUnique({
       where: { id: Number(id) },
       include: {
-        batches: true,
         ...include,
       },
     });

@@ -1,16 +1,22 @@
-import ProductorService from "../services/ProducerService.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
+import ProducerService from "../services/ProducerService.js";
 import validateBody from "../validators/validator.js";
 
 class ProducerController {
-  static async getAllProducers(req, res, next) {
+  constructor() {
+    this.producerService = new ProducerService();
+  }
+
+  getAllProducers = async (req, res, next) => {
     try {
       const { page } = req.query;
       const pageNumber = Number(page) || 1;
-      const producers = await new ProducerService().find({
+
+      const producers = await this.producerService.find({
         page: pageNumber,
       });
-      const count = await new ProducerService().countAll();
+
+      const count = await this.producerService.countAll();
 
       const data = new ResponseDataBuilder()
         .setData({ producers, count })
@@ -22,11 +28,11 @@ class ProducerController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async getProducerById(req, res, next) {
+  getProducerById = async (req, res, next) => {
     try {
-      const producer = await new ProducerService().findOne(req.params.id);
+      const producer = await this.producerService.findOne(req.params.id);
       if (!producer) {
         const data = new ResponseDataBuilder()
           .setData(null)
@@ -46,12 +52,13 @@ class ProducerController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async createProducer(req, res, next) {
+  createProducer = async (req, res, next) => {
     if (validateBody(req, res)) return;
+
     try {
-      const producer = await new ProducerService().create(req.body);
+      const producer = await this.producerService.create(req.body);
       const data = new ResponseDataBuilder()
         .setData(producer)
         .setStatus(201)
@@ -62,12 +69,12 @@ class ProducerController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async updateProducer(req, res, next) {
+  updateProducer = async (req, res, next) => {
     if (validateBody(req, res)) return;
     try {
-      const producer = await new ProducerService().update(
+      const producer = await this.producerService.update(
         req.params.id,
         req.body
       );
@@ -81,11 +88,11 @@ class ProducerController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 
-  static async deleteProducer(req, res, next) {
+  deleteProducer = async (req, res, next) => {
     try {
-      await new ProducerService().delete(req.params.id);
+      await this.producerService.delete(req.params.id);
       const data = new ResponseDataBuilder()
         .setData(null)
         .setStatus(200)
@@ -96,7 +103,7 @@ class ProducerController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
 
 export default ProducerController;
