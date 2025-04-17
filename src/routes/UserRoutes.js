@@ -118,7 +118,6 @@ router.put(
   "/:id",
 
   verifyToken,
-  isAdmin,
 
   [
     body("name").optional().isString().withMessage("El nombre es requerido."),
