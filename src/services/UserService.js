@@ -113,8 +113,6 @@ class UserService {
 
     const { role, ...userData } = data;
 
-    console.log(role)
-
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
