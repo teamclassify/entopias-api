@@ -78,9 +78,9 @@ model Batch {
 
 model Producer {
   id      Int    @id @default(autoincrement())
-  name    String
-  email   String
-  phone   String
+  name    String @unique
+  email   String @unique
+  phone   String @unique
   country String
   state   String
   farm    String
