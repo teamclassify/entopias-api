@@ -106,7 +106,7 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *         description: Usuario no encontrado
  */
 router.put(
-  "/:id",
+  "/",
 
   verifyToken,
 
