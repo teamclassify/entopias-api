@@ -74,12 +74,13 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *     tags:
  *       - Usuarios
  *     parameters:
- *       - in: path
- *         name: id
+ *       - in: header
+ *         name: Authorization
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del usuario a actualizar
+ *         description: Bearer token for authentication
+
  *     requestBody:
  *       required: true
  *       content:
@@ -89,23 +90,13 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Orlando Actualizado"
- *               photo:
- *                 type: string
- *                 example: "nueva_foto.jpg"
- *               gender:
- *                 type: string
- *                 enum: [male, female]
- *                 example: "male"
+ *                 example: "Example Name"
  *               phone:
  *                 type: string
  *                 example: "3009998888"
- *               email:
+ *               gender:
  *                 type: string
- *                 example: "orlandoNuevo@gmail.com"
- *               role:
- *                 type: string
- *                 example: "admin"
+ *                 example: "male"
  *     responses:
  *       200:
  *         description: Usuario actualizado con éxito
