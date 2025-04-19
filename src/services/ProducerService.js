@@ -3,6 +3,44 @@ import prisma from "../config/prisma.js";
 class ProducerService {
   constructor() {}
 
+  #normalizeName(name) {
+    return name.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  #normalizeEmail(email) {
+    return email.trim().toLowerCase();
+  }
+
+  async #checkDuplicates({ name, email, phone }, excludeId = null) {
+    const normalizedName = this.#normalizeName(name);
+    const normalizedEmail = this.#normalizeEmail(email);
+
+    const whereClause = {
+      OR: [
+        { name: normalizedName },
+        { email: normalizedEmail },
+        { phone },
+      ],
+    };
+
+    if (excludeId !== null) {
+      whereClause.NOT = { id: Number(excludeId) };
+    }
+
+    const existing = await prisma.producer.findFirst({ where: whereClause });
+
+    if (existing) {
+      const reasons = [];
+      if (existing.name === normalizedName) reasons.push("name");
+      if (existing.email === normalizedEmail) reasons.push("email");
+      if (existing.phone === phone) reasons.push("phone");
+
+      throw new Error(`A producer with this ${reasons.join(", ")} already exists.`);
+    }
+
+    return { normalizedName, normalizedEmail };
+  }
+
   async countAll({ where } = {}) {
     const count = await prisma.producer.count({ where });
     return count;
@@ -34,10 +72,11 @@ class ProducerService {
   }
 
   async create(data) {
+    const { normalizedName, normalizedEmail } = await this.#checkDuplicates(data);
     const producer = await prisma.producer.create({
       data: {
-        name: data.name,
-        email: data.email,
+        name: normalizedName,
+        email: normalizedEmail,
         phone: data.phone,
         country: data.country,
         state: data.state,
