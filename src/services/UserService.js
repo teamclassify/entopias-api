@@ -100,29 +100,31 @@ class UserService {
   }
 
   async update(id, data) {
-    // Verificar si el usuario existe
     const userExists = await prisma.user.findUnique({
       where: { id },
+      include: {
+        roles: true,
+      },
     });
 
     if (!userExists) {
       throw new Error("El usuario no existe.");
     }
 
-    // Extraer el rol antes de actualizar el usuario
     const { role, ...userData } = data;
 
-    // Actualizar los datos del usuario (sin modificar el rol)
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: userData,
+      data: {
+        name: userData.name,
+        gender: userData.gender,
+        phone: userData.phone,
+      },
     });
 
     if (role) {
-      // Buscar el ID del rol
       const roleId = await this.findUserRoleId(role);
 
-      // Actualizar o asignar el rol en la tabla intermedia
       await prisma.usersOnRoles.upsert({
         where: {
           userId_roleId: {
@@ -130,7 +132,7 @@ class UserService {
             roleId: roleId,
           },
         },
-        update: {}, // Si el usuario ya tiene ese rol, no hace nada
+        update: {},
         create: {
           userId: id,
           roleId: roleId,
@@ -138,12 +140,15 @@ class UserService {
         },
       });
     } else {
-      // Si no se proporciona un nuevo rol, eliminar la asignación existente
-      await prisma.usersOnRoles.deleteMany({
-        where: {
-          userId: id,
-        },
-      });
+      const hasAdminRole = userExists.roles.some((role) => role.roleId === 0);
+
+      if (!hasAdminRole) {
+        await prisma.usersOnRoles.deleteMany({
+          where: {
+            userId: id,
+          },
+        });
+      }
     }
 
     return updatedUser;

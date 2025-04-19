@@ -74,6 +74,12 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *     tags:
  *       - Usuarios
  *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token for authentication
  *       - in: path
  *         name: id
  *         required: true
@@ -89,23 +95,13 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *             properties:
  *               name:
  *                 type: string
- *                 example: "Orlando Actualizado"
- *               photo:
- *                 type: string
- *                 example: "nueva_foto.jpg"
- *               gender:
- *                 type: string
- *                 enum: [male, female]
- *                 example: "male"
+ *                 example: "Example Name"
  *               phone:
  *                 type: string
  *                 example: "3009998888"
- *               email:
+ *               gender:
  *                 type: string
- *                 example: "orlandoNuevo@gmail.com"
- *               role:
- *                 type: string
- *                 example: "admin"
+ *                 example: "male"
  *     responses:
  *       200:
  *         description: Usuario actualizado con éxito
@@ -125,6 +121,7 @@ router.put(
       .optional()
       .isMobilePhone()
       .withMessage("El teléfono debe ser válido."),
+    body("gender").optional().isString().withMessage("El género es requerido."),
   ],
 
   UserController.updateUser

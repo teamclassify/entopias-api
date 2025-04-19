@@ -2,9 +2,45 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+async function cleanDatabase() {
+  const producers = await prisma.producer.findMany();
+
+  const seenNames = new Set();
+  const seenEmails = new Set();
+  const seenPhones = new Set();
+
+  for (const producer of producers) {
+    const name = (producer.name || "").toLowerCase();
+    const email = (producer.email || "").toLowerCase();
+    const phone = producer.phone || "";
+
+    const isDuplicate =
+      seenNames.has(name) || seenEmails.has(email) || seenPhones.has(phone);
+
+    if (isDuplicate) {
+      try {
+        await prisma.producer.delete({
+          where: { id: producer.id },
+        });
+        console.log(`Eliminado duplicado con ID: ${producer.id}`);
+      } catch (error) {
+        console.error(
+          `Error al eliminar productor con ID ${producer.id}: ${error.message}`
+        );
+      }
+    } else {
+      seenNames.add(name);
+      seenEmails.add(email);
+      seenPhones.add(phone);
+    }
+  }
+
+  console.log("Limpieza de base de datos completada.");
+}
+
 async function main() {
   // ... you will write your Prisma Client queries here
-
+  //await cleanDatabase();
   try {
     await prisma.role.create({
       data: {

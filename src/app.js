@@ -32,9 +32,9 @@ app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/users", userRoutes);
 app.use("/api/roles", roleRoutes);
-app.use("/api/lotes", batchRouter);
+app.use("/api/batches", batchRouter);
 app.use("/api/variedades", VarietyRouter);
-app.use("/api/productores", producerRouter);
+app.use("/api/producers", producerRouter);
 
 app.use(handleErrors);
 
