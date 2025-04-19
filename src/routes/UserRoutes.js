@@ -80,7 +80,12 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *         schema:
  *           type: string
  *         description: Bearer token for authentication
-
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del usuario a actualizar
  *     requestBody:
  *       required: true
  *       content:
@@ -106,7 +111,7 @@ router.get("/:id", verifyToken, UserController.getUserById);
  *         description: Usuario no encontrado
  */
 router.put(
-  "/",
+  "/:id",
 
   verifyToken,
 
@@ -116,6 +121,7 @@ router.put(
       .optional()
       .isMobilePhone()
       .withMessage("El teléfono debe ser válido."),
+    body("gender").optional().isString().withMessage("El género es requerido."),
   ],
 
   UserController.updateUser

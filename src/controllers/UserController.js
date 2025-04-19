@@ -119,14 +119,15 @@ class UserController {
       return;
     }
 
-    const { id } = req.params;
-    const { name, phone, gender } = req.body;
+    const id = req.params.id;
+    const { name, phone, gender, role } = req.body;
 
     try {
       const user = await new UserService().update(id, {
         name,
         phone,
         gender,
+        role,
       });
 
       const data = new ResponseDataBuilder()
