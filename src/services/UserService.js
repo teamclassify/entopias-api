@@ -115,7 +115,11 @@ class UserService {
     // Actualizar los datos del usuario (sin modificar el rol)
     const updatedUser = await prisma.user.update({
       where: { id },
-      data: userData,
+      data: {
+        name: userData.name,
+        gender: user.gender,
+        phone: userData.phone
+      },
     });
 
     if (role) {
