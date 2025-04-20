@@ -12,6 +12,7 @@ import userRoutes from "./routes/UserRoutes.js";
 import batchRouter from "./routes/Batches.js";
 import VarietyRouter from "./routes/Varieties.js";
 import producerRouter from "./routes/Producer.js";
+import paymentsRouter from "./routes/Payments.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/api/roles", roleRoutes);
 app.use("/api/batches", batchRouter);
 app.use("/api/variedades", VarietyRouter);
 app.use("/api/producers", producerRouter);
+app.use("/api/payments", paymentsRouter);
 
 app.use(handleErrors);
 
