@@ -25,6 +25,8 @@ model User {
   name      String
   birthday  DateTime?
   roles     UsersOnRoles[]
+  orders Order[]
+  cart   Cart?
 }
 
 model UsersOnRoles {
@@ -62,9 +64,9 @@ model Batch {
   productId      Int
   producerId     Int
   initialWeight  Float
-  finalWeight    String
+  finalWeight    Float
   roastedDate    DateTime
-  roastedType    DateTime
+  roastedType    String
   aromaticNotes  String
   expirationDate DateTime
   purchasePrice  Float?
@@ -89,10 +91,60 @@ model Producer {
 }
 
 model Variety {
+  id         Int           @id @default(autoincrement())
+  stock      Int
+  weight     Float
+  price      Float
+  productId  Int
+  product    Product       @relation(fields: [productId], references: [id])
+  orderItems OrderItem[]
+  cartItems  CartProduct[]
+}
+
+model Invoice {
+  id            Int      @id @default(autoincrement())
+  orderId       Int      @unique
+  transactionId String
+  bank          String
+  status        String
+  date          DateTime
+  amount        Float
+  order         Order    @relation(fields: [orderId], references: [id])
+}
+
+model OrderItem {
   id        Int     @id @default(autoincrement())
-  stock     Int
-  weight    Float
-  price     Float
-  productId Int
-  product   Product @relation(fields: [productId], references: [id])
+  varietyId Int
+  orderId   Int
+  quantity  Int
+  variety   Variety @relation(fields: [varietyId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+}
+
+model Order {
+  id           Int      @id @default(autoincrement())
+  userId       String
+  total        Float
+  status       String
+  createdAt   DateTime @default(now())
+
+  user    User        @relation(fields: [userId], references: [id])
+  items   OrderItem[]
+  invoice Invoice?
+}
+
+model CartProduct {
+  id        Int @id @default(autoincrement())
+  varietyId Int
+  cartId    Int
+  quantity  Int
+  variety Variety @relation(fields: [varietyId], references: [id])
+  cart    Cart    @relation(fields: [cartId], references: [id])
+}
+
+model Cart {
+  id     Int    @id @default(autoincrement())
+  userId String @unique
+  user  User    @relation(fields: [userId], references: [id])
+  items CartProduct[]
 }
