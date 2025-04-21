@@ -1,12 +1,14 @@
 import authApp from "../config/firebase.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
+import CartService from "../services/CartService.js";
 import AuthService from "../services/UserService.js";
-import validateBody from "../validators/validator.js";
 import sendEmail from "../utils/sendEmail.js";
+import validateBody from "../validators/validator.js";
 
 class AuthController {
   constructor() {
     this.userService = new AuthService();
+    this.cartService = new CartService();
   }
 
   login = async (req, res, next) => {
@@ -52,6 +54,9 @@ class AuthController {
           gender: "na",
           role: req.body.role === "sales" ? "sales" : "user",
         });
+
+        // create cart for user
+        await this.cartService.createCart({ userId: id });
 
         // send email to user
         await sendEmail({
@@ -101,6 +106,9 @@ class AuthController {
           gender: "na",
           role: "sales",
         });
+
+        // create cart for user
+        await this.cartService.createCart({ userId: userCreated.uid });
 
         if (!userCreatedInDB) {
           const data = new ResponseDataBuilder()
