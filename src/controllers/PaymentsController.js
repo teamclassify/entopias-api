@@ -137,7 +137,7 @@ class PaymentsController {
 
     if (eventType === "checkout.session.completed") {
       console.log(`🔔  Payment received!`);
-      const id = data.object.id;
+      const id = Number(data.object.id);
 
       const { invoice, order } = await this.paymentsService.updateDataPayment(
         id,
