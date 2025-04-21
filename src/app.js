@@ -7,6 +7,7 @@ import handleErrors from "./middlewares/handleErrors.js";
 import authRouter from "./routes/Auth.js";
 import batchRouter from "./routes/Batches.js";
 import cartRouter from "./routes/Cart.js";
+import invoicesRouter from "./routes/Invoices.js";
 import paymentsRouter from "./routes/Payments.js";
 import producerRouter from "./routes/Producer.js";
 import productsRouter from "./routes/Products.js";
@@ -38,6 +39,7 @@ app.use("/api/variedades", VarietyRouter);
 app.use("/api/producers", producerRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/cart", cartRouter);
+app.use("/api/invoices", invoicesRouter);
 
 app.use(handleErrors);
 
