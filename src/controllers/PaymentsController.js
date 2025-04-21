@@ -137,8 +137,8 @@ class PaymentsController {
 
     if (eventType === "payment_intent.succeeded") {
       console.log(`🔔  Payment received!`);
-      console.log(data);
     }
+    console.log(data);
 
     res.sendStatus(200);
   };
