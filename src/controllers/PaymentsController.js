@@ -43,6 +43,36 @@ class PaymentsController {
       next(error);
     }
   };
+
+  getPayment = async (req, res, next) => {
+    const { session_id } = req.params;
+
+    console.log("session_id", session_id);
+
+    try {
+      const session = await this.stripe.checkout.sessions.retrieve(session_id);
+
+      if (!session) {
+        const response = new ResponseDataBuilder()
+          .setStatus(404)
+          .setMsg("El pago no se pudo crear")
+          .build();
+
+        return res.status(response.status).json(response);
+      }
+
+      const response = new ResponseDataBuilder()
+        .setData(session)
+        .setStatus(200)
+        .setMsg("El pago se creo correctamente")
+        .build();
+
+      return res.status(response.status).json(response);
+    } catch (error) {
+      console.error("Error getting payment:", error);
+      next(error);
+    }
+  };
 }
 
 export default PaymentsController;

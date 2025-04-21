@@ -5,14 +5,14 @@ import swaggerDocs from "./config/swaggerConfig.js";
 import handleErrors from "./middlewares/handleErrors.js";
 
 import authRouter from "./routes/Auth.js";
-import cafeRouter from "./routes/Cafes.js";
+import batchRouter from "./routes/Batches.js";
+import cartRouter from "./routes/Cart.js";
+import paymentsRouter from "./routes/Payments.js";
+import producerRouter from "./routes/Producer.js";
 import productsRouter from "./routes/Products.js";
 import roleRoutes from "./routes/RoleRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
-import batchRouter from "./routes/Batches.js";
 import VarietyRouter from "./routes/Varieties.js";
-import producerRouter from "./routes/Producer.js";
-import paymentsRouter from "./routes/Payments.js";
 
 const app = express();
 
@@ -37,6 +37,7 @@ app.use("/api/batches", batchRouter);
 app.use("/api/variedades", VarietyRouter);
 app.use("/api/producers", producerRouter);
 app.use("/api/payments", paymentsRouter);
+app.use("/api/cart", cartRouter);
 
 app.use(handleErrors);
 
