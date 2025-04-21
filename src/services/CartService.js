@@ -109,11 +109,35 @@ class CartService {
     });
   }
 
+  /**
+   * Remove a product from the cart
+   * @param {*} data { userId, varietyId }
+   * @returns { cartProduct }
+   */
   async removeProductFromCart(data) {
     const cart = await prisma.cart.findFirst({
       where: {
         userId: data.userId,
       },
+    });
+
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
+    const cartProduct = await prisma.cartProduct.findFirst({
+      where: {
+        cartId: cart.id,
+        varietyId: data.varietyId,
+      },
+    });
+
+    if (!cartProduct) {
+      throw new Error("Product not found in cart");
+    }
+
+    return await prisma.cartProduct.delete({
+      where: { id: cartProduct.id },
     });
   }
 }

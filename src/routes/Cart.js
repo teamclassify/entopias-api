@@ -119,4 +119,43 @@ cartRouter.get("/", verifyToken, controller.getCart);
  */
 cartRouter.post("/", verifyToken, controller.addProductToCart);
 
+/**
+ * @swagger
+ * /cart:   
+ *   delete:
+ *     summary: Remove a product from the user's cart
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               varietyId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Product removed from cart
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                 error:
+ *                   type: string
+ *                 status:
+ *                   type: number
+ *                 msg:
+ *                   type: string
+ */
+cartRouter.delete("/", verifyToken, controller.removeProductFromCart);
+
 export default cartRouter;

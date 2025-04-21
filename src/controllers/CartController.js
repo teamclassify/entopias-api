@@ -42,6 +42,28 @@ class CartController {
       next(error);
     }
   };
+
+  removeProductFromCart = async (req, res, next) => {
+    const id = req.id;
+    const { varietyId } = req.body;
+
+    try {
+      const cart = await this.cartService.removeProductFromCart({
+        userId: id,
+        varietyId,
+      });
+
+      const data = new ResponseDataBuilder()
+        .setData(cart)
+        .setStatus(200)
+        .setMsg("Product removed from cart")
+        .build();
+
+      res.status(data.status).json(data);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default CartController;
