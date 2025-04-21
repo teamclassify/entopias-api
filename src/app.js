@@ -23,7 +23,18 @@ app.use(
   })
 );
 
-app.use(express.json());
+// We need the raw body to verify webhook signatures.
+// Let's compute it only when hitting the Stripe webhook endpoint.
+app.use(
+  express.json({
+    verify: function (req, res, buf) {
+      if (req.originalUrl.startsWith("/api/payments/webhook")) {
+        req.rawBody = buf.toString();
+      }
+    },
+  })
+);
+
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/api", (_, res) => {
