@@ -103,6 +103,49 @@ class PaymentsController {
       next(error);
     }
   };
+
+  webhook = async (req, res, next) => {
+    let data;
+    let eventType;
+
+    // Check if webhook signing is configured.
+    if (process.env.STRIPE_WEBHOOK_SECRET) {
+      // Retrieve the event by verifying the signature using the raw body and secret.
+      let event;
+      let signature = req.headers["stripe-signature"];
+
+      try {
+        event = stripe.webhooks.constructEvent(
+          req.rawBody,
+          signature,
+          process.env.STRIPE_WEBHOOK_SECRET
+        );
+      } catch (err) {
+        console.log(`⚠️  Webhook signature verification failed.`);
+        next(err);
+      }
+
+      // Extract the object from the event.
+      data = event.data;
+      eventType = event.type;
+    } else {
+      // Webhook signing is recommended, but if the secret is not configured in `config.js`,
+      // retrieve the event data directly from the request body.
+      data = req.body.data;
+      eventType = req.body.type;
+    }
+
+    if (eventType === "checkout.session.completed") {
+      console.log(`🔔  Payment received!`);
+    }
+
+    const response = new ResponseDataBuilder()
+      .setStatus(200)
+      .setMsg("Webhook received")
+      .build();
+
+    return res.status(response.status).json(response);
+  };
 }
 
 export default PaymentsController;

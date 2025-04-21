@@ -137,4 +137,6 @@ paymentsRouter.post(
   controller.createPayment
 );
 
+paymentsRouter.post("/webhook", controller.webhook);
+
 export default paymentsRouter;
