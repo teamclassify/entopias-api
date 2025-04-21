@@ -136,6 +136,16 @@ async function main() {
   } catch {
     // console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
   }
+
+  try {
+    await prisma.cart.create({
+      data: {
+        userId: "VVLnneZUiaczCUvyFluc01B70r12",
+      },
+    });
+  } catch {
+    // console.log("ERROR CREANDO EL CARRITO DEL USUARIO ADMIN.");
+  }
 }
 
 main()
