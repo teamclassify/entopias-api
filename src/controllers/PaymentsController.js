@@ -136,20 +136,29 @@ class PaymentsController {
     }
 
     let status = "pending";
-    const id = data.object.id;
+    let id = null;
 
     if (eventType === "checkout.session.completed") {
       console.log(`🔔  Payment received!`);
+      id = data.object.id;
       status = "paid";
     } else if (eventType === "checkout.session.expired") {
       console.log(`🔔  Payment expired!`);
+      id = data.object.id;
       status = "expired";
     } else if (eventType === "checkout.session.async_payment_succeeded") {
       console.log(`🔔  Payment succeeded!`);
+      id = data.object.id;
       status = "paid";
     } else if (eventType === "checkout.session.async_payment_failed") {
       console.log(`🔔  Payment failed!`);
+      id = data.object.id;
       status = "failed";
+    }
+
+    if (!id) {
+      console.log(`🔔  No id found!`);
+      return res.sendStatus(200);
     }
 
     await this.paymentsService.updateDataPayment(id, {
