@@ -139,12 +139,7 @@ class PaymentsController {
       console.log(`🔔  Payment received!`);
     }
 
-    const response = new ResponseDataBuilder()
-      .setStatus(200)
-      .setMsg("Webhook received")
-      .build();
-
-    return res.status(response.status).json(response);
+    res.sendStatus(200);
   };
 }
 
