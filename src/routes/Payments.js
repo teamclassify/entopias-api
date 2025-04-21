@@ -1,11 +1,66 @@
 import express from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 
 import PaymentsController from "../controllers/PaymentsController.js";
 import verifyToken from "../middlewares/verifyToken.js";
 
 const paymentsRouter = express.Router();
 const controller = new PaymentsController();
+
+/**
+ * @swagger
+ * /api/payments/get-payment/{session_id}:
+ *   get:
+ *     tags:
+ *       - Payments
+ *     summary: Get a payment
+ *     description: Get a payment by session ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: session_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The session ID to get the payment for
+ *     responses:
+ *       200:
+ *         description: Payment retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: number
+ *                   example: 200
+ *                 msg:
+ *                   type: string
+ *                   example: "Payment retrieved successfully"
+ *                 data:
+ *                   type: object
+ *                   description: Stripe Payment object
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       404:
+ *         description: Payment not found
+ *       500:
+ *         description: Server error while retrieving payment
+ */
+paymentsRouter.get(
+  "/get-payment/:session_id",
+
+  verifyToken,
+
+  [
+    param("session_id")
+      .notEmpty()
+      .withMessage("El ID de la sesión es requerido."),
+  ],
+
+  controller.getPayment
+);
 
 /**
  * @swagger
