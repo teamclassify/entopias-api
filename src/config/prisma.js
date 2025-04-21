@@ -70,7 +70,7 @@ async function main() {
     await prisma.user.create({
       data: {
         email: "byandrev@gmail.com",
-        id: "VVLnneZUiaczCUvyFluc01B70r12",
+        id: "KoT8x22CpCR3KZFsdMKBKNgsBQu2",
         name: "Andres",
         phone: "319889249",
         gender: "na",
@@ -90,7 +90,7 @@ async function main() {
         },
         user: {
           connect: {
-            id: "VVLnneZUiaczCUvyFluc01B70r12",
+            id: "KoT8x22CpCR3KZFsdMKBKNgsBQu2",
           },
         },
       },
@@ -109,7 +109,7 @@ async function main() {
         },
         user: {
           connect: {
-            id: "VVLnneZUiaczCUvyFluc01B70r12",
+            id: "KoT8x22CpCR3KZFsdMKBKNgsBQu2",
           },
         },
       },
@@ -128,13 +128,23 @@ async function main() {
         },
         user: {
           connect: {
-            id: "VVLnneZUiaczCUvyFluc01B70r12",
+            id: "KoT8x22CpCR3KZFsdMKBKNgsBQu2",
           },
         },
       },
     });
   } catch {
     // console.log("ERROR ASIGNANDO LOS ROLES AL USUARIO ADMIN.");
+  }
+
+  try {
+    await prisma.cart.create({
+      data: {
+        userId: "KoT8x22CpCR3KZFsdMKBKNgsBQu2",
+      },
+    });
+  } catch {
+    // console.log("ERROR CREANDO EL CARRITO DEL USUARIO ADMIN.");
   }
 }
 
