@@ -18,6 +18,13 @@ const controller = new CartController();
  *     tags: [Cart]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token for authentication
  *     responses:
  *       200:
  *         description: Cart found
@@ -86,6 +93,13 @@ cartRouter.get("/", verifyToken, controller.getCart);
  *     tags: [Cart]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token for authentication
  *     requestBody:
  *       required: true
  *       content:
@@ -127,6 +141,13 @@ cartRouter.post("/", verifyToken, controller.addProductToCart);
  *     tags: [Cart]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Bearer token for authentication
  *     requestBody:
  *       required: true
  *       content:
