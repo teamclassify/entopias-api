@@ -2,14 +2,37 @@ import stripe from "stripe";
 
 import { URL_FRONT } from "../config/index.js";
 import ResponseDataBuilder from "../models/ResponseData.js";
+import CartService from "../services/CartService.js";
+import PaymentsService from "../services/PaymentsService.js";
 
 class PaymentsController {
   constructor() {
     this.stripe = new stripe(process.env.STRIPE_SECRET_KEY);
+    this.cartService = new CartService();
+    this.paymentsService = new PaymentsService();
   }
 
   createPayment = async (req, res, next) => {
-    const { products, currency } = req.body;
+    const { currency } = req.body;
+
+    const cartProducts = await this.cartService.getCart(req.id);
+    const products = cartProducts.items.map((item) => {
+      return {
+        name: item.variety.product.name,
+        price: item.variety.price,
+        quantity: item.quantity,
+        varietyId: item.varietyId,
+      };
+    });
+
+    if (products.length === 0) {
+      const response = new ResponseDataBuilder()
+        .setStatus(400)
+        .setMsg("No products in cart")
+        .build();
+
+      return res.status(response.status).json(response);
+    }
 
     const line_items = products.map((product) => ({
       price_data: {
@@ -31,8 +54,15 @@ class PaymentsController {
         return_url: `${URL_FRONT}/pagos/exitoso?session_id={CHECKOUT_SESSION_ID}`,
       });
 
+      // create order  and invoice  in the db
+      const { order, invoice } = await this.paymentsService.createDataPayment({
+        session,
+        products,
+        userId: req.id,
+      });
+
       const response = new ResponseDataBuilder()
-        .setData(session)
+        .setData({ session, order, invoice })
         .setStatus(200)
         .setMsg("Session created successfully")
         .build();
