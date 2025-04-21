@@ -34,16 +34,20 @@ class PaymentsService {
     return { order, invoice, orderItems };
   }
 
-  async updateDataPayment(id, data) {
+  async updateDataPayment(transactionId, data) {
     const invoice = await prisma.invoice.update({
-      where: { id },
+      where: { transactionId },
       data: {
         status: data.status,
       },
     });
 
+    if (!invoice) {
+      throw new Error("Invoice not found");
+    }
+
     const order = await prisma.order.update({
-      where: { id },
+      where: { id: invoice.orderId },
       data: {
         status: data.status,
       },
