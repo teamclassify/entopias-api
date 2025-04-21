@@ -135,10 +135,19 @@ class PaymentsController {
       eventType = req.body.type;
     }
 
-    if (eventType === "payment_intent.succeeded") {
+    if (eventType === "checkout.session.completed") {
       console.log(`🔔  Payment received!`);
+      const id = data.object.id;
+
+      const { invoice, order } = await this.paymentsService.updateDataPayment(
+        id,
+        {
+          status: "paid",
+        }
+      );
+
+      console.log(invoice, order);
     }
-    console.log(data);
 
     res.sendStatus(200);
   };

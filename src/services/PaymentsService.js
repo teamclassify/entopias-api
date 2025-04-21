@@ -13,7 +13,7 @@ class PaymentsService {
     });
 
     const orderItems = await prisma.orderItem.createMany({
-      data: products.map((product) =>   ({
+      data: products.map((product) => ({
         orderId: order.id,
         varietyId: product.varietyId,
         quantity: product.quantity,
@@ -32,6 +32,24 @@ class PaymentsService {
     });
 
     return { order, invoice, orderItems };
+  }
+
+  async updateDataPayment(id, data) {
+    const invoice = await prisma.invoice.update({
+      where: { id },
+      data: {
+        status: data.status,
+      },
+    });
+
+    const order = await prisma.order.update({
+      where: { id },
+      data: {
+        status: data.status,
+      },
+    });
+
+    return { invoice, order };
   }
 }
 
