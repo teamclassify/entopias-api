@@ -135,8 +135,9 @@ class PaymentsController {
       eventType = req.body.type;
     }
 
-    if (eventType === "checkout.session.completed") {
+    if (eventType === "payment_intent.succeeded") {
       console.log(`🔔  Payment received!`);
+      console.log(data);
     }
 
     res.sendStatus(200);
