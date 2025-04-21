@@ -14,9 +14,17 @@ class CartService {
         userId: userId,
       },
       include: {
-        cartProducts: {
+        items: {
           include: {
-            variety: true,
+            variety: {
+              include: {
+                product: {
+                  include: {
+                    photos: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
