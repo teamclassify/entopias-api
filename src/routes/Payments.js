@@ -86,30 +86,12 @@ paymentsRouter.get(
  *           schema:
  *             type: object
  *             required:
- *               - products
+ *               - currency
  *             properties:
  *               currency:
  *                 type: string
  *                 description: The currency to charge for
  *                 example: "usd"
- *               products:
- *                 type: array
- *                 description: The products to charge for
- *                 items:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       description: The product ID
- *                     quantity:
- *                       type: number
- *                       description: The quantity of the product
- *                     price:
- *                       type: number
- *                       description: The price of the product
- *                     name:
- *                       type: string
- *                       description: The name of the product
  *     responses:
  *       200:
  *         description: Payment intent created successfully
@@ -154,5 +136,7 @@ paymentsRouter.post(
 
   controller.createPayment
 );
+
+paymentsRouter.post("/webhook", controller.webhook);
 
 export default paymentsRouter;
