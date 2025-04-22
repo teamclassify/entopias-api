@@ -48,13 +48,16 @@ class BatchController {
 
   create = async (req, res, next) => {
     if (validateBody(req, res)) return;
+
     try {
       const batch = await this.batchService.create(req.body);
+      
       const data = new ResponseDataBuilder()
         .setData(batch)
         .setStatus(201)
         .setMsg("Batch created successfully")
         .build();
+
       res.status(201).json(data);
     } catch (err) {
       console.error(err);

@@ -1,14 +1,36 @@
+import { v4 as uuidv4 } from "uuid";
 import prisma from "../config/prisma.js";
 
 class BatchService {
   constructor() {}
+
   async create(data) {
+    const uid = uuidv4();
+    let product = { id: data.productId };
+
+    if (!data.productId) {
+      product = await prisma.product.create({
+        data: {
+          name: uid,
+          description: data.aromaticNotes ?? "",
+          type: "",
+          status: false,
+        },
+      });
+    }
+
     return await prisma.batch.create({
-      data,
-      include: {
-        product: true,
-        producer: true,
-      },
+      data: {
+        productId: product.id,
+        producerId: data.producerId,
+        initialWeight: Number(data.initialWeight),
+        finalWeight: Number(data.finalWeight),
+        roastedDate: data.roastedDate,
+        roastedType: data.roastedType,
+        aromaticNotes: data.aromaticNotes,
+        expirationDate: data.expirationDate,
+        purchasePrice: data.purchasePrice ?? 0,
+      }
     });
   }
 

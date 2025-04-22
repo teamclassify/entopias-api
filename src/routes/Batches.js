@@ -16,6 +16,7 @@ batchRouter.post(
   isSalesOrAdmin,
   [
     body("productId")
+      .optional()
       .isInt({ gt: 0 })
       .withMessage("The product ID is required and must be a positive integer"),
     body("producerId")
@@ -27,13 +28,13 @@ batchRouter.post(
     body("finalWeight")
       .isFloat({ gt: 0 })
       .withMessage("Final weight must be a number greater than 0"),
-    body("roastDate")
+    body("roastedDate")
       .isISO8601()
       .withMessage("Roast date must be a valid date"),
-    body("roastType")
+    body("roastedType")
       .notEmpty()
       .withMessage("Roast type is required"),
-    body("aromaNotes")
+    body("aromaticNotes")
       .notEmpty()
       .withMessage("Aroma notes are required"),
     body("expirationDate")
