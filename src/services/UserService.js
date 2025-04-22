@@ -10,7 +10,7 @@ class UserService {
     return count;
   }
 
-  async find({ page = 0, where, include }) {
+  async find({ page = 1, where, include }) {
     const users = await prisma.user.findMany({
       where,
 
