@@ -161,9 +161,14 @@ class PaymentsController {
       return res.sendStatus(200);
     }
 
-    await this.paymentsService.updateDataPayment(id, {
-      status,
-    });
+    try {
+      await this.paymentsService.updateDataPayment(id, {
+        status,
+      });
+    } catch (error) {
+      console.error("Error updating payment:", error);
+      return res.sendStatus(500);
+    }
 
     res.sendStatus(200);
   };
