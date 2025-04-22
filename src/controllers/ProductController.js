@@ -8,7 +8,7 @@ class ProductController {
   }
 
   getAll = async (req, res, next) => {
-    const { page, search } = req.query;
+    const { page, search, status } = req.query;
     const pageNumber = parseInt(page) || 1;
 
     const where = {};
@@ -18,6 +18,10 @@ class ProductController {
         contains: search,
         mode: "insensitive",
       };
+    }
+
+    if (status !== undefined) {
+      where.status = Boolean(status)
     }
 
     try {
