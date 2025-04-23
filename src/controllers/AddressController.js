@@ -76,39 +76,38 @@ class AddressController {
 
   update = async (req, res, next) => {
     if (validateBody(req, res)) return;
+
     try {
       const userId = req.id;
       const { id } = req.params;
-      const result = await this.addressService.update(id, userId, req.body);
+
+      const result = await this.addressService.update(id, userId, {
+        city: req.body.city,
+        country: req.body.country,
+        postalCode: req.body.postalCode,
+      });
+
       if (result.count === 0) {
         const data = new ResponseDataBuilder()
           .setData(null)
           .setStatus(404)
           .setMsg("Address not found or not owner")
           .build();
-        return res.status(404).json(data);
+
+        return res.status(data.status).json(data);
       }
+
       const updated = await this.addressService.findOne(id, userId);
+
       const data = new ResponseDataBuilder()
         .setData(updated)
         .setStatus(200)
         .setMsg("Address updated successfully")
         .build();
-      res.status(200).json(data);
+
+      res.status(data.status).json(data);
     } catch (err) {
-      console.error(err);
-      if (err.message.includes("already exists")) {
-        return res
-          .status(400)
-          .json(
-            new ResponseDataBuilder()
-              .setData(null)
-              .setStatus(400)
-              .setMsg(err.message)
-              .build()
-          );
-      }
-      next(err);
+      next(err.message);
     }
   };
 
@@ -116,24 +115,28 @@ class AddressController {
     try {
       const userId = req.id;
       const { id } = req.params;
+
       const result = await this.addressService.delete(id, userId);
+
       if (result.count === 0) {
         const data = new ResponseDataBuilder()
           .setData(null)
           .setStatus(404)
           .setMsg("Address not found or not owner")
           .build();
-        return res.status(404).json(data);
+
+        return res.status(data.status).json(data);
       }
+
       const data = new ResponseDataBuilder()
         .setData(null)
         .setStatus(200)
         .setMsg("Address deleted successfully")
         .build();
-      res.status(200).json(data);
+
+      res.status(data.status).json(data);
     } catch (err) {
-      console.error(err);
-      next(err);
+      next(err.message);
     }
   };
 }
