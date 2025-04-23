@@ -59,7 +59,12 @@ class AddressController {
     try {
       const userId = req.id;
 
-      const address = await this.addressService.create(userId, req.body);
+      const address = await this.addressService.create(userId, {
+        city: req.body.city,
+        country: req.body.country,
+        postalCode: req.body.postalCode,
+        address: req.body.address,
+      });
 
       const data = new ResponseDataBuilder()
         .setData(address)

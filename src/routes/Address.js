@@ -123,8 +123,15 @@ router.get("/:id", verifyToken, controller.getOne);
  */
 router.post(
   "/",
+
   verifyToken,
+
   [
+    body("address")
+      .notEmpty()
+      .withMessage("Address is required")
+      .isString()
+      .withMessage("Address must be a string"),
     body("city")
       .notEmpty()
       .withMessage("City is required")
@@ -141,13 +148,7 @@ router.post(
       .isString()
       .withMessage("Postal code must be a string"),
   ],
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    next();
-  },
+
   controller.create
 );
 
@@ -193,6 +194,11 @@ router.put(
   verifyToken,
 
   [
+    body("address")
+      .notEmpty()
+      .withMessage("Address is required")
+      .isString()
+      .withMessage("Address must be a string"),
     body("city")
       .notEmpty()
       .withMessage("If provided, city cannot be empty")
