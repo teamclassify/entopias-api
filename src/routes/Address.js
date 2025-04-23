@@ -37,6 +37,8 @@ const controller = new AddressController();
  *                     properties:
  *                       id:
  *                         type: integer
+ *                       address:
+ *                         type: string
  *                       city:
  *                         type: string
  *                       country:
@@ -108,12 +110,15 @@ router.get("/:id", verifyToken, controller.getOne);
  *               - city
  *               - country
  *               - postalCode
+ *               - address
  *             properties:
  *               city:
  *                 type: string
  *               country:
  *                 type: string
  *               postalCode:
+ *                 type: string
+ *               address:
  *                 type: string
  *     responses:
  *       201:
@@ -179,6 +184,8 @@ router.post(
  *               country:
  *                 type: string
  *               postalCode:
+ *                 type: string
+ *               address:
  *                 type: string
  *     responses:
  *       200:
