@@ -1,15 +1,20 @@
-import ResponseDataBuilder from "../models/ResponseData";
-import AddressService from "../services/AddressService";
+import ResponseDataBuilder from "../models/ResponseData.js";
+import AddressService from "../services/AddressService.js";
 import validateBody from "../validators/validator.js";
 
 class AddressController {
   constructor() {
-    this.AddressService = new AddressService();
+    this.addressService = new AddressService();
   }
 
   getAll = async (req, res, next) => {
+    if (validateBody(req, res)) {
+      return;
+    }
+
     try {
       const userId = req.id;
+
       const addresses = await this.addressService.findAllByUser(userId);
       const data = new ResponseDataBuilder()
         .setData(addresses)
@@ -50,28 +55,22 @@ class AddressController {
 
   create = async (req, res, next) => {
     if (validateBody(req, res)) return;
+
     try {
       const userId = req.id;
+
       const address = await this.addressService.create(userId, req.body);
+
       const data = new ResponseDataBuilder()
         .setData(address)
         .setStatus(201)
         .setMsg("Address created successfully")
         .build();
-      res.status(201).json(data);
+
+      res.status(data.status).json(data);
     } catch (err) {
       console.error(err);
-      // Handle duplicate error from service
-      if (err.message.includes("already exists")) {
-        return res.status(400).json(
-          new ResponseDataBuilder()
-            .setData(null)
-            .setStatus(400)
-            .setMsg(err.message)
-            .build()
-        );
-      }
-      next(err);
+      next(err.message);
     }
   };
 
@@ -99,18 +98,19 @@ class AddressController {
     } catch (err) {
       console.error(err);
       if (err.message.includes("already exists")) {
-        return res.status(400).json(
-          new ResponseDataBuilder()
-            .setData(null)
-            .setStatus(400)
-            .setMsg(err.message)
-            .build()
-        );
+        return res
+          .status(400)
+          .json(
+            new ResponseDataBuilder()
+              .setData(null)
+              .setStatus(400)
+              .setMsg(err.message)
+              .build()
+          );
       }
       next(err);
     }
   };
-
 
   delete = async (req, res, next) => {
     try {
