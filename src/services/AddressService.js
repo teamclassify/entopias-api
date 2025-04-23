@@ -13,19 +13,20 @@ class AddressService {
 
   //Verificar que el usuario no repita la misma direccion
   async #checkDuplicates(
-    { city, country, postalCode },
+    { city, country, postalCode, address },
     userId,
     excludeId = null
   ) {
     const normalizedCity = this.#normalizeText(city);
     const normalizedCountry = this.#normalizeText(country);
     const normalizedPostal = this.#normalizePostal(postalCode);
-
+    const normalizedAddress = this.#normalizeText(address);
     const where = {
       userId,
       city: normalizedCity,
       country: normalizedCountry,
       postalCode: normalizedPostal,
+      address: normalizedAddress,
     };
     if (excludeId !== null) {
       where.NOT = { id: Number(excludeId) };
@@ -36,7 +37,12 @@ class AddressService {
       throw new Error("You already have this address registered.");
     }
 
-    return { normalizedCity, normalizedCountry, normalizedPostal };
+    return {
+      normalizedCity,
+      normalizedCountry,
+      normalizedPostal,
+      normalizedAddress,
+    };
   }
 
   async findAllByUser(userId) {
@@ -52,8 +58,13 @@ class AddressService {
   }
 
   async create(userId, data) {
-    const { normalizedCity, normalizedCountry, normalizedPostal } =
-      await this.#checkDuplicates(data, userId);
+    console.log(data);
+    const {
+      normalizedCity,
+      normalizedCountry,
+      normalizedPostal,
+      normalizedAddress,
+    } = await this.#checkDuplicates(data, userId);
 
     return prisma.address.create({
       data: {
@@ -61,13 +72,14 @@ class AddressService {
         city: normalizedCity,
         country: normalizedCountry,
         postalCode: normalizedPostal,
+        address: normalizedAddress,
       },
     });
   }
 
   async update(id, userId, data) {
     let normalizedData = {};
-    if (data.city || data.country || data.postalCode) {
+    if (data.city || data.country || data.postalCode || data.address) {
       normalizedData = await this.#checkDuplicates(data, userId, id);
     }
 
@@ -77,6 +89,7 @@ class AddressService {
         city: normalizedData.normalizedCity,
         country: normalizedData.normalizedCountry,
         postalCode: normalizedData.normalizedPostal,
+        address: normalizedData.normalizedAddress,
       },
     });
   }
