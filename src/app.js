@@ -15,6 +15,8 @@ import productsRouter from "./routes/Products.js";
 import roleRoutes from "./routes/RoleRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
+import adressRoutes from "./routes/Address.js";
+
 const app = express();
 
 app.use(
@@ -52,6 +54,7 @@ app.use("/api/payments", paymentsRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/invoices", invoicesRouter);
 app.use("/api/orders", ordersRouter);
+app.use("/api/addresses", adressRoutes);
 
 app.use(handleErrors);
 
