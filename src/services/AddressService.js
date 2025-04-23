@@ -41,15 +41,14 @@ class AddressService {
 
   async findAllByUser(userId) {
     return prisma.address.findMany({
-      where:   { userId },
+      where: { userId },
       include: { orders: true },
     });
   }
 
   async findOne(id, userId) {
     return prisma.address.findFirst({
-      where:   { id: Number(id), userId },
-      include: { orders: true },
+      where: { id: Number(id), userId },
     });
   }
 
@@ -60,8 +59,8 @@ class AddressService {
     return prisma.address.create({
       data: {
         userId,
-        city:       normalizedCity,
-        country:    normalizedCountry,
+        city: normalizedCity,
+        country: normalizedCountry,
         postalCode: normalizedPostal,
       },
     });
