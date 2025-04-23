@@ -25,8 +25,9 @@ model User {
   name      String
   birthday  DateTime?
   roles     UsersOnRoles[]
-  orders Order[]
-  cart   Cart?
+  orders    Order[]
+  cart      Cart?
+  addresses   Address[]
 }
 
 model UsersOnRoles {
@@ -131,6 +132,9 @@ model Order {
   user    User        @relation(fields: [userId], references: [id])
   items   OrderItem[]
   invoice Invoice?
+
+  addressId    Int?
+  address      Address?    @relation(fields: [addressId], references: [id])
 }
 
 model CartProduct {
@@ -147,4 +151,19 @@ model Cart {
   userId String @unique
   user  User    @relation(fields: [userId], references: [id])
   items CartProduct[]
+}
+
+model Address{
+  id          Int      @id @default(autoincrement())
+  userId      String
+  city        String
+  country     String
+  postalCode  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  user User @relation(fields: [userId],references:[id])
+  orders Order[] 
+
+  @@unique ([userId,city,country,postalCode])
 }
