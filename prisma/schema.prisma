@@ -156,6 +156,7 @@ model Cart {
 model Address{
   id          Int      @id @default(autoincrement())
   userId      String
+  address     String
   city        String
   country     String
   postalCode  String
