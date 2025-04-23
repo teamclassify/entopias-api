@@ -66,12 +66,18 @@ class AddressService {
   }
 
   async update(id, userId, data) {
+    let normalizedData = {};
     if (data.city || data.country || data.postalCode) {
-      await this.#checkDuplicates(data, userId, id);
+      normalizedData = await this.#checkDuplicates(data, userId, id);
     }
+
     return prisma.address.updateMany({
       where: { id: Number(id), userId },
-      data,
+      data: {
+        city: normalizedData.normalizedCity,
+        country: normalizedData.normalizedCountry,
+        postalCode: normalizedData.normalizedPostal,
+      },
     });
   }
 
