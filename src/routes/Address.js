@@ -1,5 +1,5 @@
-import express from "express";
-import {body, validationResult} from "express-validator";
+import express, { query } from "express";
+import { body, validationResult } from "express-validator";
 
 import AddressController from "../controllers/AddressController.js";
 import verifyToken from "../middlewares/verifyToken.js";
@@ -59,7 +59,13 @@ const controller = new AddressController();
  *                   type: string
  *                   format: date-time
  */
-router.get("/", verifyToken, controller.getAll);
+router.get(
+  "/",
+
+  verifyToken,
+
+  controller.getAll
+);
 
 /**
  * @swagger
@@ -183,27 +189,27 @@ router.post(
  */
 router.put(
   "/:id",
+
   verifyToken,
+
   [
     body("city")
-      .optional()
       .notEmpty()
       .withMessage("If provided, city cannot be empty")
       .isString()
       .withMessage("City must be a string"),
     body("country")
-      .optional()
       .notEmpty()
       .withMessage("If provided, country cannot be empty")
       .isString()
       .withMessage("Country must be a string"),
     body("postalCode")
-      .optional()
       .notEmpty()
       .withMessage("If provided, postal code cannot be empty")
       .isString()
       .withMessage("Postal code must be a string"),
   ],
+
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -222,6 +228,7 @@ router.put(
     }
     next();
   },
+
   controller.update
 );
 
