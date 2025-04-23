@@ -90,6 +90,7 @@ class AddressController {
         city: req.body.city,
         country: req.body.country,
         postalCode: req.body.postalCode,
+        address: req.body.address,
       });
 
       if (result.count === 0) {
