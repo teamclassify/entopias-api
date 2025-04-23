@@ -42,7 +42,6 @@ class AddressService {
   async findAllByUser(userId) {
     return prisma.address.findMany({
       where: { userId },
-      include: { orders: true },
     });
   }
 
