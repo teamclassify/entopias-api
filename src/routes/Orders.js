@@ -137,4 +137,12 @@ ordersRouter.get(
   controller.getOrders
 );
 
+ordersRouter.get(
+  "/count",
+  verifyToken,
+  isSalesOrAdmin,
+  controller.getCount.bind(controller)
+)
+
+
 export default ordersRouter;
