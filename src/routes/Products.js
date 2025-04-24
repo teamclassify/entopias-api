@@ -1,5 +1,5 @@
 import express from "express";
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 import multer from "multer";
 
 import ProductController from "../controllers/ProductController.js";
@@ -58,7 +58,42 @@ const upload = multer({});
  *                   type: string
  *                   example: "2024-01-20T15:30:00.000Z"
  */
-productRouter.get("/", controller.getAll);
+productRouter.get(
+  "/",
+
+  [
+    query("page")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("El número de página debe ser un número entero positivo"),
+    query("search")
+      .optional()
+      .isString()
+      .withMessage("El nombre del producto debe ser una cadena de caracteres"),
+    query("status")
+      .optional()
+      .isBoolean()
+      .withMessage("El estado debe ser un valor booleano"),
+    query("type")
+      .optional()
+      .isString()
+      .withMessage("El tipo debe ser una cadena de caracteres"),
+    query("weight")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage("El peso debe ser un número entero positivo"),
+    query("minPrice")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage("El precio mínimo debe ser un número entero positivo"),
+    query("maxPrice")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage("El precio máximo debe ser un número entero positivo"),
+  ],
+
+  controller.getAll
+);
 
 /**
  * @swagger
