@@ -67,6 +67,7 @@ class ProductService {
       data: {
         name: data.name,
         description: data.descripcion,
+        type: data.type,
 
         photos: {
           create: data.photos.map((photo) => ({
@@ -175,6 +176,7 @@ class ProductService {
         name: data.name,
         description: data.description,
         status: Boolean(data.status),
+        type: data.type,
 
         photos: {
           create: newPhotos.map((photo) => ({
