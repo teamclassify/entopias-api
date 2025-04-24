@@ -8,7 +8,12 @@ class ProductController {
   }
 
   getAll = async (req, res, next) => {
-    const { page, search, status } = req.query;
+    if (validateBody(req, res)) {
+      return;
+    }
+
+    const { page, search, status, weight, type, minPrice, maxPrice } =
+      req.query;
     const pageNumber = parseInt(page) || 1;
 
     const where = {};
@@ -21,7 +26,40 @@ class ProductController {
     }
 
     if (status !== undefined) {
-      where.status = Boolean(status)
+      where.status = Boolean(status);
+    }
+
+    if (weight !== undefined) {
+      // filtro para la cantidad de productos pero en las variedades
+      where.varieties = {
+        some: {
+          weight: 100
+        },
+      };
+    }
+
+    if (type !== undefined) {
+      where.type = type;
+    }
+
+    if (minPrice !== undefined) {
+      where.varieties = {
+        some: {
+          price: {
+            gte: minPrice,
+          },
+        },
+      };
+    }
+
+    if (maxPrice !== undefined) {
+      where.varieties = {
+        some: {
+          price: {
+            lte: maxPrice,
+          },
+        },
+      };
     }
 
     try {
@@ -126,8 +164,6 @@ class ProductController {
               };
             })
         );
-
-      console.log(req.body);
 
       const updatedProduct = await this.productService.update(id, {
         ...req.body,
