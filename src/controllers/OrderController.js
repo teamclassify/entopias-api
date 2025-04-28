@@ -25,6 +25,22 @@ class OrderController {
       next(error);
     }
   };
+  
+  getCount = async (req, res, next) => {
+    try {
+      const count = await this.orderService.countAll()
+  
+      const response = new ResponseDataBuilder()
+        .setData({ count })
+        .setStatus(200)
+        .setMsg("Order count fetched successfully")
+        .build()
+  
+      return res.status(response.status).json(response)
+    } catch (error) {
+      next(error)
+    }
+  }
 
   getOrderById = async (req, res, next) => {
     const { id } = req.params;

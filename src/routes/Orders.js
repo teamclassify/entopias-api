@@ -137,6 +137,15 @@ ordersRouter.get(
   controller.getOrders
 );
 
+ordersRouter.get(
+  "/count",
+  
+  verifyToken,
+  isSalesOrAdmin,
+  
+  controller.getCount
+);
+
 /**
  * @swagger
  * /orders/{id}:
