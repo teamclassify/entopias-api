@@ -25,6 +25,35 @@ class OrderController {
       next(error);
     }
   };
+
+  getOrderById = async (req, res, next) => {
+    const { id } = req.params;
+    const idNumber = parseInt(id, 10);
+
+    try {
+      const order = await this.orderService.findOne({ id: idNumber });
+
+      if (!order) {
+        const response = new ResponseDataBuilder()
+          .setStatus(404)
+          .setError(true)
+          .setMsg("Order not found")
+          .build();
+
+        return res.status(response.status).json(response);
+      }
+
+      const response = new ResponseDataBuilder()
+        .setData(order)
+        .setStatus(200)
+        .setMsg("Order fetched successfully")
+        .build();
+
+      return res.status(response.status).json(response);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default OrderController;
