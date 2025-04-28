@@ -43,6 +43,7 @@ class OrderService {
       where: { id },
       include: {
         user: true,
+        address: true,
         items: {
           include: {
             variety: {
