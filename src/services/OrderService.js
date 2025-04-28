@@ -16,6 +16,7 @@ class OrderService {
       where,
       include: {
         user: true,
+        address: true,
         items: {
           include: {
             variety: {
