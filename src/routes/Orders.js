@@ -23,6 +23,24 @@ const controller = new OrderController();
  *         schema:
  *           type: string
  *         description: Bearer token for authentication
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: number
+ *         description: Page number
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Status of the order
+ *       - in: query
+ *         name: userId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: User ID of the order
  *     responses:
  *       200:
  *         description: Orders fetched successfully
@@ -129,10 +147,14 @@ const controller = new OrderController();
 ordersRouter.get(
   "/",
 
-  verifyToken,
-  isSalesOrAdmin,
+  // verifyToken,
+  // isSalesOrAdmin,
 
-  [query("page").optional().isInt(), body("where").optional().isObject()],
+  [
+    query("page").optional().isInt(),
+    query("status").optional().isIn(["paid", "pending", "expired", "failed"]),
+    query("userId").optional().isString(),
+  ],
 
   controller.getOrders
 );

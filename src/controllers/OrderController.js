@@ -8,7 +8,16 @@ class OrderController {
 
   getOrders = async (req, res, next) => {
     const { page } = req.query;
-    const { where } = req.body;
+    const { status, userId } = req.query;
+    const where = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (userId) {
+      where.userId = userId;
+    }
 
     try {
       const orders = await this.orderService.find({ page, where });
@@ -22,6 +31,7 @@ class OrderController {
 
       return res.status(response.status).json(response);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   };
