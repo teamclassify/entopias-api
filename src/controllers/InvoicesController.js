@@ -8,7 +8,16 @@ class InvoicesController {
 
   getInvoices = async (req, res, next) => {
     const { page } = req.query;
-    const { where } = req.body;
+    const { status, userId } = req.query;
+    const where = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (userId) {
+      where.userId = userId;
+    }
 
     try {
       const invoices = await this.invoicesService.find({
