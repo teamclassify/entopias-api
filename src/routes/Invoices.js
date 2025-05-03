@@ -26,25 +26,16 @@ const controller = new InvoicesController();
  *         required: false
  *         schema:
  *           type: number
- *       - in: body
- *         name: where
+ *       - in: query
+ *         name: status
  *         required: false
  *         schema:
- *           type: object
- *           properties:
- *             orderId:
- *               type: number
- *             status:
- *               type: string
- *               enum:
- *                 - pending
- *                 - paid
- *                 - failed
- *                 - canceled
- *             bank:
- *               type: string
- *             date:
- *               type: string
+ *           type: string
+ *       - in: query
+ *         name: userId
+ *         required: false
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Invoices fetched successfully
@@ -173,7 +164,8 @@ invoicesRouter.get(
 
   [
     query("page").optional().isInt({ min: 1 }).toInt(),
-    body("where").optional().isObject(),
+    query("status").optional().isIn(["pending", "paid", "failed", "canceled"]),
+    query("userId").optional().isString(),
   ],
 
   controller.getInvoices
