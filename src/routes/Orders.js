@@ -147,8 +147,8 @@ const controller = new OrderController();
 ordersRouter.get(
   "/",
 
-  // verifyToken,
-  // isSalesOrAdmin,
+  verifyToken,
+  isSalesOrAdmin,
 
   [
     query("page").optional().isInt(),
