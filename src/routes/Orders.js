@@ -148,7 +148,6 @@ ordersRouter.get(
   "/",
 
   verifyToken,
-  isSalesOrAdmin,
 
   [
     query("page").optional().isInt(),
@@ -161,10 +160,10 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/count",
-  
+
   verifyToken,
   isSalesOrAdmin,
-  
+
   controller.getCount
 );
 
@@ -276,7 +275,6 @@ ordersRouter.get(
   "/:id",
 
   verifyToken,
-  isSalesOrAdmin,
 
   [body("where").optional().isObject()],
 
