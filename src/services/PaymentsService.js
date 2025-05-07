@@ -3,12 +3,13 @@ import prisma from "../config/prisma.js";
 class PaymentsService {
   constructor() {}
 
-  async createDataPayment({ session, products, userId }) {
+  async createDataPayment({ session, products, userId, address }) {
     const order = await prisma.order.create({
       data: {
         userId,
         total: session.amount_total,
         status: "pending",
+        addressId: address,
       },
     });
 

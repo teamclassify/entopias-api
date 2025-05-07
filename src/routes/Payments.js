@@ -130,8 +130,8 @@ paymentsRouter.post(
   verifyToken,
 
   [
-    body("products").notEmpty().withMessage("Los productos son requeridos."),
     body("currency").notEmpty().withMessage("La moneda es requerida."),
+    body("address").notEmpty().withMessage("La dirección es requerida."),
   ],
 
   controller.createPayment

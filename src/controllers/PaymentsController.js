@@ -13,7 +13,7 @@ class PaymentsController {
   }
 
   createPayment = async (req, res, next) => {
-    const { currency } = req.body;
+    const { currency, address } = req.body;
 
     const cartProducts = await this.cartService.getCart(req.id);
     const products = cartProducts.items.map((item) => {
@@ -59,6 +59,7 @@ class PaymentsController {
         session,
         products,
         userId: req.id,
+        address,
       });
 
       const response = new ResponseDataBuilder()
