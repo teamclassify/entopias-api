@@ -18,6 +18,7 @@ class InvoicesService {
         order: {
           include: {
             user: true,
+            address: true,
             items: {
               include: {
                 variety: {
@@ -45,7 +46,21 @@ class InvoicesService {
     const invoice = await prisma.invoice.findFirst({
       where: { id },
       include: {
-        order: true,
+        order: {
+          include: {
+            user: true,
+            address: true,
+            items: {
+              include: {
+                variety: {
+                  include: {
+                    product: true,
+                  },
+                },
+              },
+            },
+          },
+        }
       },
     });
 
