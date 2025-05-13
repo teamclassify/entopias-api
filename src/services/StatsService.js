@@ -5,7 +5,7 @@ class StatsService {
 
     //product stats
 
-    async mostSoldVariety({ limit = 10, startDate, endDate }) {
+    async getSalesVarieties({ limit = 10, startDate, endDate, order = "desc"}) {
         const sales = await prisma.orderItem.groupBy({
             by: ['varietyId'],
             where: {
@@ -21,7 +21,7 @@ class StatsService {
             },
             orderBy: {
                 _count: {
-                    quantity: 'desc',
+                    quantity: order,
                 },
             },
             take: limit,
@@ -74,7 +74,6 @@ class StatsService {
             },
         });
 
-        // 2. Group and compute revenue per variety (product)
         const revenueMap = new Map();
 
         for (const item of orderItems) {
@@ -83,12 +82,11 @@ class StatsService {
             revenueMap.set(item.varietyId, prev + revenue);
         }
 
-        // 3. Sort by revenue and take top N
         const sorted = [...revenueMap.entries()]
             .sort((a, b) => b[1] - a[1])
             .slice(0, limit);
 
-        // 4. Fetch the corresponding varieties
+
         const varietyIds = sorted.map(([id]) => id);
 
         const varieties = await prisma.variety.findMany({
@@ -96,20 +94,18 @@ class StatsService {
                 id: { in: varietyIds },
             },
             include: {
-                product: true,  // Include the related product
+                product: true, 
             },
         });
 
         const varietyMap = Object.fromEntries(varieties.map(v => [v.id, v]));
 
-        // 5. Assemble the result in the correct order
         return sorted.map(([id, revenue]) => ({
             ...varietyMap[id],
             revenue,
-            productName: varietyMap[id].product.name,  // Add product info if needed
+            productName: varietyMap[id].product.name, 
         }));
     }
-
 
 }
 
