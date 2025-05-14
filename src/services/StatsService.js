@@ -6,6 +6,12 @@ class StatsService {
     //product stats
 
     async getSalesVarieties({ limit = 10, startDate, endDate, order = "desc" }) {
+        if (!startDate) {
+            startDate = new Date(new Date().setDate(new Date().getDate() - 30));
+        }
+        if (!endDate) {
+            endDate = new Date();
+        }
         const sales = await prisma.orderItem.groupBy({
             by: ['varietyId'],
             where: {
@@ -53,6 +59,12 @@ class StatsService {
     }
 
     async getSalesProducts({ limit = 10, startDate, endDate, order = "desc" }) {
+        if (!startDate) {
+            startDate = new Date(new Date().setDate(new Date().getDate() - 30)); // 30 días atrás
+        }
+        if (!endDate) {
+            endDate = new Date(); // Fecha actual
+        }
         const sales = await prisma.orderItem.groupBy({
             by: ['varietyId'],
             where: {
@@ -116,6 +128,12 @@ class StatsService {
     }
 
     async mostProfitableVarieties({ limit = 10, startDate, endDate }) {
+        if (!startDate) {
+            startDate = new Date(new Date().setDate(new Date().getDate() - 30)); // 30 días atrás
+        }
+        if (!endDate) {
+            endDate = new Date(); // Fecha actual
+        }
 
         const orderItems = await prisma.orderItem.findMany({
             where: {
