@@ -5,7 +5,7 @@ class StatsService {
 
     //product stats
 
-    async getSalesVarieties({ limit = 10, startDate, endDate, order = "desc"}) {
+    async getSalesVarieties({ limit = 10, startDate, endDate, order = "desc" }) {
         const sales = await prisma.orderItem.groupBy({
             by: ['varietyId'],
             where: {
@@ -16,11 +16,11 @@ class StatsService {
                     },
                 },
             },
-            _count: {
+            _sum: {
                 quantity: true,
             },
             orderBy: {
-                _count: {
+                _sum: {
                     quantity: order,
                 },
             },
@@ -47,9 +47,72 @@ class StatsService {
             }
             return {
                 ...v,
-                soldCount: s._count.quantity,
+                soldCount: s._sum.quantity,
             };
         });
+    }
+
+    async getSalesProducts({ limit = 10, startDate, endDate, order = "desc" }) {
+        const sales = await prisma.orderItem.groupBy({
+            by: ['varietyId'],
+            where: {
+                order: {
+                    createdAt: {
+                        gte: startDate,
+                        lte: endDate,
+                    },
+                },
+            },
+            _sum: {
+                quantity: true,
+            },
+            orderBy: {
+                _sum: {
+                    quantity: order,
+                },
+            },
+        });
+
+        const varietiesInRange = sales.map(s => s.varietyId);
+
+        const products = await prisma.product.findMany({
+            where: {
+                varieties: {
+                    some: {
+                        id: { in: varietiesInRange }
+                    }
+                },
+            },
+            include: {
+                varieties: {
+                    where: {
+                        id: { in: varietiesInRange }
+                    },
+                }
+            }
+        });
+
+        const varietyToProductId = new Map();
+        products.forEach(p => {
+            p.varieties.forEach(v => {
+                varietyToProductId.set(v.id, p.id);
+            });
+        });
+
+        const productCount = new Map();
+        sales.forEach(s => {
+            const productId = varietyToProductId.get(s.varietyId);
+            const prev = productCount.get(productId) || 0;
+            productCount.set(productId, prev + s._sum.quantity);
+        });
+
+        return products
+            .map(p => ({
+                ...p,
+                soldCount: productCount.get(p.id) || 0,
+            }))
+            .sort((a, b) => b.soldCount - a.soldCount)
+            .slice(0, limit);
     }
 
     async mostProfitableVarieties({ limit = 10, startDate, endDate }) {
@@ -94,7 +157,7 @@ class StatsService {
                 id: { in: varietyIds },
             },
             include: {
-                product: true, 
+                product: true,
             },
         });
 
@@ -103,7 +166,7 @@ class StatsService {
         return sorted.map(([id, revenue]) => ({
             ...varietyMap[id],
             revenue,
-            productName: varietyMap[id].product.name, 
+            productName: varietyMap[id].product.name,
         }));
     }
 
