@@ -1,9 +1,11 @@
 import cors from "cors";
 import express from "express";
+import { rateLimit } from "express-rate-limit";
 import { PORT } from "./config/index.js";
 import swaggerDocs from "./config/swaggerConfig.js";
 import handleErrors from "./middlewares/handleErrors.js";
 
+import adressRoutes from "./routes/Address.js";
 import authRouter from "./routes/Auth.js";
 import batchRouter from "./routes/Batches.js";
 import cartRouter from "./routes/Cart.js";
@@ -15,9 +17,15 @@ import productsRouter from "./routes/Products.js";
 import roleRoutes from "./routes/RoleRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
-import adressRoutes from "./routes/Address.js";
 
 const app = express();
+
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes).
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
 
 app.use(
   cors({
@@ -38,6 +46,7 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: true }));
+app.use(limiter);
 
 app.get("/api", (_, res) => {
   res.json({ message: "Hello from server!" });
