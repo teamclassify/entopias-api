@@ -3,8 +3,7 @@ import prisma from "../config/prisma.js";
 class StatsService {
     constructor() { }
 
-    //product stats
-
+    
     async getSalesVarieties({ limit = 10, startDate, endDate, order = "desc" }) {
         if (!startDate) {
             startDate = new Date(new Date().setDate(new Date().getDate() - 30));

@@ -55,12 +55,12 @@ class StatsController {
 
     getMostProfitableVarieties = async (req, res, next) => {
         if (validateBody(req.body)) return;
-        if (validateBody(req.body)) return;
         const { startDate, endDate, limit, order } = req.body;
         const options = {
             startDate: new Date(startDate),
             endDate: new Date(endDate),
             ...(limit !== undefined && { limit: parseInt(limit, 10) }),
+            ...(order !== undefined && { order }),
         };
         try {
             const top = await this.statsService.mostProfitableVarieties(options);
