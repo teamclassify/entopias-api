@@ -3,7 +3,7 @@ import prisma from "../config/prisma.js";
 class StatsService {
     constructor() { }
 
-    
+
     async getSalesVarieties({ limit = 10, startDate, endDate, order = "desc" }) {
         if (!startDate) {
             startDate = new Date(new Date().setDate(new Date().getDate() - 30));
@@ -126,7 +126,7 @@ class StatsService {
             .slice(0, limit);
     }
 
-    async mostProfitableVarieties({ limit = 10, startDate, endDate }) {
+    async topProfitableVarieties({ limit = 10, startDate, endDate, order = "desc" }) {
         if (!startDate) {
             startDate = new Date(new Date().setDate(new Date().getDate() - 30)); // 30 días atrás
         }
@@ -162,10 +162,10 @@ class StatsService {
             revenueMap.set(item.varietyId, prev + revenue);
         }
 
+        //obtener los limit mejores (basado en el "asc" o "desc")
         const sorted = [...revenueMap.entries()]
-            .sort((a, b) => b[1] - a[1])
+            .sort((a, b) => order === "asc" ? a[1] - b[1] : b[1] - a[1])
             .slice(0, limit);
-
 
         const varietyIds = sorted.map(([id]) => id);
 

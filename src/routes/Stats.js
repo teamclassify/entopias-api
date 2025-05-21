@@ -241,7 +241,7 @@ router.get(
 
 /**
  * @swagger
- * /stats/most-profitable-varieties:
+ * /stats/top-profitable-varieties:
  *   get:
  *     summary: Obtiene las variedades más rentables
  *     tags: [Statistics]
@@ -330,7 +330,7 @@ router.get(
  */
 
 router.get(
-  "/most-profitable-varieties",
+  "/top-profitable-varieties",
   verifyToken,
   [
     query("startDate")
@@ -350,7 +350,7 @@ router.get(
       .isIn(["asc", "desc"])
       .withMessage("Order must be 'asc' or 'desc'"),
   ],
-  controller.getMostProfitableVarieties
+  controller.getTopProfitableVarieties
 );
 
 export default router;

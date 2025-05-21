@@ -53,7 +53,7 @@ class StatsController {
         }
     }
 
-    getMostProfitableVarieties = async (req, res, next) => {
+    getTopProfitableVarieties = async (req, res, next) => {
         if (validateBody(req.body)) return;
         const { startDate, endDate, limit, order } = req.body;
         const options = {
@@ -63,7 +63,7 @@ class StatsController {
             ...(order !== undefined && { order }),
         };
         try {
-            const top = await this.statsService.mostProfitableVarieties(options);
+            const top = await this.statsService.topProfitableVarieties(options);
             const data = new ResponseDataBuilder()
                 .setData(top)
                 .setStatus(200)
