@@ -353,4 +353,87 @@ router.get(
   controller.getTopProfitableVarieties
 );
 
+router.get(
+  "/total-orders",
+  verifyToken,
+  controller.getTotalOrders
+);
+
+router.get(
+  "/orders-by-date",
+  verifyToken,
+  [
+    query("startDate")
+      .optional()
+      .isISO8601()
+      .withMessage("Start date must be a valid ISO 8601 date"),
+    query("endDate")
+      .optional()
+      .isISO8601()
+      .withMessage("End date must be a valid ISO 8601 date"),
+  ],
+  controller.getOrdersByDate
+);
+
+router.get(
+  "/total-revenue-by-date",
+  verifyToken,
+  [
+    query("startDate")
+      .optional()
+      .isISO8601()
+      .withMessage("Start date must be a valid ISO 8601 date"),
+    query("endDate")
+      .optional()
+      .isISO8601()
+      .withMessage("End date must be a valid ISO 8601 date"),
+  ],
+  controller.getTotalRevenueByDate
+);
+
+router.get(
+  "/group-orders-by-status",
+  verifyToken,
+  controller.getGroupOrdersByStatus
+);
+
+router.get(
+  "/group-invoice-by-bank",
+  verifyToken,
+  controller.getGroupInvoiceByBank
+);
+
+router.get(
+  "/average-order-value",
+  verifyToken,
+  [
+    query("startDate")
+      .optional()
+      .isISO8601()
+      .withMessage("Start date must be a valid ISO 8601 date"),
+    query("endDate")
+      .optional()
+      .isISO8601()
+      .withMessage("End date must be a valid ISO 8601 date"),
+  ],
+  controller.getAverageOrderValue
+);
+
+
+router.get(
+  "/average-products-per-order",
+  verifyToken,
+  [
+    query("startDate")
+      .optional()
+      .isISO8601()
+      .withMessage("Start date must be a valid ISO 8601 date"),
+    query("endDate")
+      .optional()
+      .isISO8601()
+      .withMessage("End date must be a valid ISO 8601 date"),
+  ],
+  controller.getAverageProductsPerOrder
+);
+
 export default router;
