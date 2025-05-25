@@ -1,6 +1,6 @@
 import ResponseDataBuilder from "../models/ResponseData.js";
 import StatsService from "../services/StatsService.js";
-import validateBody from "../validators/validator.js";
+import validateBody from "../validators/validator.js"; // Using for query validation, or replace with a proper validateQuery
 
 class StatsController {
     constructor() {
@@ -8,11 +8,12 @@ class StatsController {
     }
 
     getTopSalesVarieties = async (req, res, next) => {
-        if (validateBody(req.body)) return;
-        const { startDate, endDate, limit, order } = req.body;
+        // Validate query parameters
+        if (validateBody(req.query)) return;
+        const { startDate, endDate, limit, order } = req.query;
         const options = {
-            startDate: new Date(startDate),
-            endDate: new Date(endDate),
+            startDate: startDate ? new Date(startDate) : undefined,
+            endDate: endDate ? new Date(endDate) : undefined,
             ...(limit !== undefined && { limit: parseInt(limit, 10) }),
             ...(order !== undefined && { order }),
         };
@@ -31,11 +32,11 @@ class StatsController {
     };
 
     getTopSalesProduct = async (req, res, next) => {
-        if (validateBody(req.body)) return;
-        const { startDate, endDate, limit, order } = req.body;
+        if (validateBody(req.query)) return;
+        const { startDate, endDate, limit, order } = req.query;
         const options = {
-            startDate: new Date(startDate),
-            endDate: new Date(endDate),
+            startDate: startDate ? new Date(startDate) : undefined,
+            endDate: endDate ? new Date(endDate) : undefined,
             ...(limit !== undefined && { limit: parseInt(limit, 10) }),
             ...(order !== undefined && { order }),
         };
@@ -51,14 +52,14 @@ class StatsController {
             console.error(err);
             next(err);
         }
-    }
+    };
 
     getTopProfitableVarieties = async (req, res, next) => {
-        if (validateBody(req.body)) return;
-        const { startDate, endDate, limit, order } = req.body;
+        if (validateBody(req.query)) return;
+        const { startDate, endDate, limit, order } = req.query;
         const options = {
-            startDate: new Date(startDate),
-            endDate: new Date(endDate),
+            startDate: startDate ? new Date(startDate) : undefined,
+            endDate: endDate ? new Date(endDate) : undefined,
             ...(limit !== undefined && { limit: parseInt(limit, 10) }),
             ...(order !== undefined && { order }),
         };
@@ -74,7 +75,7 @@ class StatsController {
             console.error(err);
             next(err);
         }
-    }
+    };
 }
 
 export default StatsController;
