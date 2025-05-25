@@ -187,6 +187,119 @@ class StatsService {
         }));
     }
 
+    async getTotalOrders() {
+        return prisma.order.count();
+    }
+
+    async getOrdersByDate({ startDate, endDate }) {
+        if (!startDate) startDate = new Date(new Date().setDate(new Date().getDate() - 30));
+        if (!endDate) endDate = new Date();
+
+        const orders = await prisma.order.count({
+            where: {
+                createdAt: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+        });
+
+        return orders;
+    }
+
+    async getTotalRevenueByDate({ startDate, endDate }) {
+        if (!startDate) startDate = new Date(new Date().setDate(new Date().getDate() - 30));
+        if (!endDate) endDate = new Date();
+
+        const revenue = await prisma.invoice.aggregate({
+            where: {
+                date: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+            _sum: {
+                amount: true,
+            },
+        });
+
+        return revenue._sum.amount || 0;
+    }
+
+    async getGroupOrdersByStatus() {
+        const orders = await prisma.order.groupBy({
+            by: ['status'],
+            _count: {
+                status: true,
+            },
+        });
+
+        return orders;
+    }
+
+    async getGroupInvoiceByBank() {
+        const invoices = await prisma.invoice.groupBy({
+            by: ['bank'],
+            _count: {
+                id: true,
+                amount: true,
+            },
+        });
+
+        return invoices;
+    }
+
+    async getAverageOrderValue({ startDate, endDate }) {
+        if (!startDate) startDate = new Date(new Date().setDate(new Date().getDate() - 30));
+        if (!endDate) endDate = new Date();
+
+        const orders = await prisma.order.aggregate({
+            where: {
+                createdAt: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+            _avg: {
+                total: true,
+            },
+        });
+
+        return orders._avg.total || 0;
+    }
+
+    async getAverageProductsPerOrder({ startDate, endDate }) {
+        const now = new Date();
+        startDate ??= new Date(now.setDate(now.getDate() - 30));
+        endDate ??= new Date();
+
+        const totalItems = await prisma.orderItem.aggregate({
+            where: {
+                order: {
+                    createdAt: {
+                        gte: startDate,
+                        lte: endDate,
+                    },
+                },
+            },
+            _sum: {
+                quantity: true,
+            },
+        });
+
+        const orderCount = await prisma.order.count({
+            where: {
+                createdAt: {
+                    gte: startDate,
+                    lte: endDate,
+                },
+            },
+        });
+
+        const totalQuantity = totalItems._sum.quantity ?? 0;
+        return orderCount > 0 ? totalQuantity / orderCount : 0;
+    }
+
 }
 
 export default StatsService;
