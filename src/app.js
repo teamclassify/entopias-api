@@ -17,7 +17,6 @@ import productsRouter from "./routes/Products.js";
 import roleRoutes from "./routes/RoleRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
-import adressRoutes from "./routes/Address.js";
 import statsRoutes from "./routes/Stats.js";
 
 const app = express();
