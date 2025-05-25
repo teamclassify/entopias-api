@@ -353,28 +353,88 @@ router.get(
   controller.getTopProfitableVarieties
 );
 
+/**
+ * @swagger
+ * /stats/total-orders:
+ *   get:
+ *     summary: Obtiene el total de pedidos
+ *     tags: [Statistics]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Total de pedidos obtenidos con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     totalOrders:
+ *                       type: integer
+ *                 error:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 msg:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
+
 router.get(
   "/total-orders",
   verifyToken,
   controller.getTotalOrders
 );
 
-router.get(
-  "/orders-by-date",
-  verifyToken,
-  [
-    query("startDate")
-      .optional()
-      .isISO8601()
-      .withMessage("Start date must be a valid ISO 8601 date"),
-    query("endDate")
-      .optional()
-      .isISO8601()
-      .withMessage("End date must be a valid ISO 8601 date"),
-  ],
-  controller.getOrdersByDate
-);
-
+/**
+ * @swagger
+ * /stats/orders-by-date:
+ *   get:
+ *     summary: Obtiene los pedidos por fecha
+ *     tags: [Statistics]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de inicio
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de fin
+ *     responses:
+ *       200:
+ *         description: Pedidos obtenidos con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     revenue:
+ *                       type: number
+ *                 error:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 msg:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
 router.get(
   "/total-revenue-by-date",
   verifyToken,
@@ -391,18 +451,146 @@ router.get(
   controller.getTotalRevenueByDate
 );
 
+/**
+ * @swagger
+ * /stats/group-orders-by-status:
+ *   get:
+ *     summary: Obtiene los pedidos agrupados por estado
+ *     tags: [Statistics]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Pedidos agrupados obtenidos con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     ordersByStatus:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           status:
+ *                             type: string
+ *                           count:
+ *                             type: object
+ *                             properties:
+ *                              status:
+ *                                type: integer
+ *                 error:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 msg:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
+
 router.get(
   "/group-orders-by-status",
   verifyToken,
   controller.getGroupOrdersByStatus
 );
 
+
+/**
+ * @swagger
+ * /stats/group-invoice-by-bank:
+ *   get:
+ *     summary: Obtiene las facturas agrupadas por banco
+ *     tags: [Statistics]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Facturas agrupadas obtenidas con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     invoicesByBank:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           bank:
+ *                             type: string
+ *                           count:
+ *                             type: object
+ *                             properties:
+ *                               id:
+ *                                 type: integer
+ *                               amount:
+ *                                 type: number
+ *                 error:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 msg:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ */
 router.get(
   "/group-invoice-by-bank",
   verifyToken,
   controller.getGroupInvoiceByBank
 );
 
+
+/**
+ * @swagger
+ * /stats/average-order-value:
+ *   get:
+ *     summary: Obtiene el valor promedio de los pedidos
+ *     tags: [Statistics]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de inicio
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de fin
+ *     responses:
+ *       200:
+ *         description: Valor promedio obtenido con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     averageOrderValue:
+ *                       type: number
+ *                 error:
+ *                   type: boolean
+ *                 status:
+ *                   type: integer
+ *                 msg:
+ *                   type: string
+ */
 router.get(
   "/average-order-value",
   verifyToken,
@@ -419,6 +607,41 @@ router.get(
   controller.getAverageOrderValue
 );
 
+/**
+ * @swagger
+ * /stats/average-products-per-order:
+ *   get:
+ *     summary: Obtiene el promedio de productos por pedido
+ *     tags: [Statistics]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de inicio
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *         description: Fecha de fin
+ *     responses:
+ *       200:
+ *         description: Promedio obtenido con éxito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     averageProductsPerOrder:
+ *                       type: number
+ */
 
 router.get(
   "/average-products-per-order",
