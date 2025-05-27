@@ -18,6 +18,7 @@ import roleRoutes from "./routes/RoleRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
 import statsRoutes from "./routes/Stats.js";
+import dashboardRouter from "./routes/dashboard.js";
 
 const app = express();
 
@@ -68,7 +69,8 @@ app.use("/api/cart", cartRouter);
 app.use("/api/invoices", invoicesRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/addresses", adressRoutes);
-app.use("/api/stats", statsRoutes); 
+app.use("/api/stats", statsRoutes);
+app.use("/api/admin", dashboardRouter); 
 
 app.use(handleErrors);
 
