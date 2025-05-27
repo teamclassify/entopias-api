@@ -26,6 +26,8 @@ class BatchController {
 
   getOne = async (req, res, next) => {
     const { id } = req.params;
+    console.log("Fetching batch with ID:", id);
+
     try {
       const batch = await this.batchService.findOne(Number(id));
       const data = batch
@@ -51,7 +53,7 @@ class BatchController {
 
     try {
       const batch = await this.batchService.create(req.body);
-      
+
       const data = new ResponseDataBuilder()
         .setData(batch)
         .setStatus(201)
