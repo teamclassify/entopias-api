@@ -30,7 +30,7 @@ class BatchService {
         aromaticNotes: data.aromaticNotes,
         expirationDate: data.expirationDate,
         purchasePrice: data.purchasePrice ?? 0,
-      }
+      },
     });
   }
 
@@ -62,9 +62,13 @@ class BatchService {
 
   async findOne(id) {
     return await prisma.batch.findUnique({
-      where: { id: Number(id) },
+      where: { id },
       include: {
-        product: true,
+        product: {
+          include: {
+            photos: true,
+          },
+        },
         producer: true,
       },
     });
