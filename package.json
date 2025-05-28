@@ -16,6 +16,7 @@
   "dependencies": {
     "@prisma/client": "^6.5.0",
     "@supabase/supabase-js": "^2.49.4",
+    "axios": "^1.9.0",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
