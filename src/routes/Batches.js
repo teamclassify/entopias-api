@@ -8,7 +8,7 @@ const batchRouter = express.Router();
 const controller = new BatchController();
 
 batchRouter.get("/", verifyToken, isSalesOrAdmin, controller.getAll);
-batchRouter.get("/:id", verifyToken, controller.getOne);
+batchRouter.get("/:id", controller.getOne);
 
 batchRouter.post(
   "/",
