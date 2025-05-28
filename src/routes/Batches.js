@@ -1,13 +1,13 @@
 import express from "express";
 import { body, validationResult } from "express-validator";
 import BatchController from "../controllers/BatchController.js";
-import verifyToken from "../middlewares/verifyToken.js";
 import { isAdmin, isSalesOrAdmin } from "../middlewares/rbac.js";
+import verifyToken from "../middlewares/verifyToken.js";
 
 const batchRouter = express.Router();
 const controller = new BatchController();
 
-batchRouter.get("/", verifyToken, isSalesOrAdmin, controller.getAll);
+batchRouter.get("/", controller.getAll);
 batchRouter.get("/:id", controller.getOne);
 
 batchRouter.post(
