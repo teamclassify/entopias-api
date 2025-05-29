@@ -261,6 +261,61 @@ invoicesRouter.get(
 
 /**
  * @swagger
+ * /invoices/report/csv:
+ *   get:
+ *     summary: Generar un reporte en CSV de las facturas
+ *     tags: [Invoices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Fecha de inicio del reporte (formato YYYY-MM-DD)
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Fecha de fin del reporte (formato YYYY-MM-DD)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 500
+ *         required: false
+ *         description: Límite de facturas a incluir en el reporte
+ *     responses:
+ *       200:
+ *         description: CSV generado exitosamente
+ *         content:
+ *           text/csv:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       500:
+ *         description: Error al generar el reporte
+ */
+invoicesRouter.get(
+  "/report/csv",
+  verifyToken,
+  isSalesOrAdmin,
+  [
+    query("from").optional().isISO8601().toDate(),
+    query("to").optional().isISO8601().toDate(),
+    query("limit").optional().isInt({ min: 1, max: 500 }).toInt(),
+  ],
+  reportController.generateCsv
+);
+
+
+/**
+ * @swagger
  * /invoices/top-selling:
  *   get:
  *     summary: Obtener productos más vendidos
@@ -284,5 +339,7 @@ invoicesRouter.get(
   [query("limit").optional().isInt({ min: 1 }).toInt()],
   controller.getTopSellingProducts
 );
+
+
 
 export default invoicesRouter;
