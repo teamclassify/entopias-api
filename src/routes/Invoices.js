@@ -218,9 +218,9 @@ invoicesRouter.get(
  */
 invoicesRouter.get("/report", 
   (req, res, next) => { console.log("[1] --> Entró a invoicesRouter"); next(); },
-  verifyToken,
+  // verifyToken,
   (req, res, next) => { console.log("[2] --> Pasó verifyToken"); next(); },
-  isSalesOrAdmin, 
+  // isSalesOrAdmin, 
   [
     query("from").optional().isISO8601().toDate(),
     query("to").optional().isISO8601().toDate(),

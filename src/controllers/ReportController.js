@@ -1,7 +1,8 @@
 import * as fs from "fs/promises";
 import mustache from "mustache";
 import * as path from "path";
-import * as puppeteer from "puppeteer";
+// import * as puppeteer from "puppeteer";
+import pdf from "html-pdf-node";
 import { fileURLToPath } from "url";
 import InvoicesService from "../services/InvoicesService.js";
 
@@ -65,12 +66,18 @@ class ReportController {
       });
 
       // Generar el pdf con puppeteer
-      const browser = await puppeteer.launch();
-      const page = await browser.newPage();
-      await page.setContent(html, { waitUntil: "load" });
-      const pdfBuffer = await page.pdf({ format: "A4" });
-      await browser.close();
+      // const browser = await puppeteer.launch();
+      // const page = await browser.newPage();
+      // await page.setContent(html, { waitUntil: "load" });
+      // const pdfBuffer = await page.pdf({ format: "A4" });
+      // await browser.close();
+      // const result = Buffer.from(pdfBuffer);
 
+      // generar pdf pero con otra librería pdfkit
+      const options = { format: "A4" };
+      const file = { content: html };
+
+      const pdfBuffer = await pdf.generatePdf(file, options);
       const result = Buffer.from(pdfBuffer);
 
       res.setHeader("Content-Type", "application/pdf");
