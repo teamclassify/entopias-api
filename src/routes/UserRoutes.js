@@ -42,6 +42,8 @@ const router = express.Router();
  */
 router.get("/", verifyToken, isSalesOrAdmin, UserController.getAllUsers);
 
+router.get("/recent", verifyToken, isSalesOrAdmin, UserController.getRecentUsers);
+
 /**
  * @swagger
  * /users/{id}:

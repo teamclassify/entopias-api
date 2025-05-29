@@ -38,6 +38,23 @@ class InvoicesController {
       next(error);
     }
   };
+
+  getRecentInvoices = async (req, res, next) => {
+    try {
+      const recent = await this.invoicesService.getRecentInvoices();
+
+      const response = new ResponseDataBuilder()
+        .setData(recent)
+        .setStatus(200)
+        .setMsg("Últimas ventas cargadas")
+        .build();
+
+      return res.status(response.status).json(response);
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  };
 }
 
 export default InvoicesController;

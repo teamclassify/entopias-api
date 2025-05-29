@@ -18,7 +18,7 @@ import roleRoutes from "./routes/RoleRoutes.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
 import statsRoutes from "./routes/Stats.js";
-import dashboardRouter from "./routes/dashboard.js";
+import dashboardRouter from "./routes/Dashboard.js";
 
 const app = express();
 
