@@ -71,9 +71,9 @@ class InvoicesService {
 
     const where = {};
 
-    console.log("fechas", where.data.gte, where.data.lte);
+    console.log("fechas", where.data?.gte, where.data?.lte);
 
-    if (from || to) {
+    if ((from || to) && !isNaN(new Date(from)) && !isNaN(new Date(to))) {
         where.date = {};
         if (from) where.date.gte = from;
         if (to) where.date.lte = to;
