@@ -34,7 +34,7 @@ class PaymentsController {
       return res.status(response.status).json(response);
     }
 
-    const DOLLAR_PRICE = 0.00023; // 0.00023 dollar = 1 peso cop
+    const DOLLAR_PRICE = 0.00024; // 0.00023 dollar = 1 peso cop
 
     const line_items = products.map((product) => ({
       price_data: {
@@ -42,7 +42,7 @@ class PaymentsController {
         product_data: {
           name: product.name,
         },
-        unit_amount: Math.floor((product.price / 4455.0969) * 100), // in cents
+        unit_amount: Math.floor((product.price / 4165.4865) * 100), // in cents
       },
       quantity: product.quantity,
     }));
