@@ -42,7 +42,7 @@ class PaymentsController {
         product_data: {
           name: product.name,
         },
-        unit_amount: Math.floor((product.price / 4144.10) * 100), // in cents
+        unit_amount: Math.floor((product.price / 4165.4865) * 100), // in cents
       },
       quantity: product.quantity,
     }));
