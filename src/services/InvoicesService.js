@@ -1,7 +1,7 @@
 import prisma from "../config/prisma.js";
 
 class InvoicesService {
-  constructor() { }
+  constructor() {}
 
   async countAll({ where } = {}) {
     const count = await prisma.invoice.count({
@@ -68,15 +68,14 @@ class InvoicesService {
   }
 
   async findByDateRange({ from, to, limit }) {
-
     const where = {};
 
     console.log("fechas", where.data?.gte, where.data?.lte);
 
     if ((from || to) && !isNaN(new Date(from)) && !isNaN(new Date(to))) {
-        where.date = {};
-        if (from) where.date.gte = from;
-        if (to) where.date.lte = to;
+      where.date = {};
+      if (from) where.date.gte = from;
+      if (to) where.date.lte = to;
     }
 
     const invoice = await prisma.invoice.findMany({
@@ -90,7 +89,7 @@ class InvoicesService {
               include: {
                 variety: {
                   include: {
-                    product: true
+                    product: true,
                   },
                 },
               },
@@ -129,6 +128,38 @@ class InvoicesService {
       date: inv.date,
       cliente: inv.order.user.name,
     }));
+  }
+
+  async getTopSellingProducts({ limit = 5 }) {
+    const result = await prisma.orderItem.groupBy({
+      by: ["varietyId"],
+      _sum: {
+        quantity: true,
+      },
+      orderBy: {
+        _sum: {
+          quantity: "desc",
+        },
+      },
+      take: limit,
+    });
+
+    const data = await Promise.all(
+      result.map(async (item) => {
+        const variety = await prisma.variety.findUnique({
+          where: { id: item.varietyId },
+          include: { product: true },
+        });
+
+        return {
+          productId: variety.product.id,
+          productName: variety.product.name,
+          totalSold: item._sum.quantity,
+        };
+      })
+    );
+
+    return data;
   }
 }
 
