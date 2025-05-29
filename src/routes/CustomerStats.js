@@ -130,6 +130,6 @@ router.get("/by-country", verifyToken, controller.getCustomersByCountry);
  *       200:
  *         description: Clientes con facturas impagas obtenidos con éxito
  */
-router.get("/unpaid-invoices", verifyToken, controller.getCustomersWithUnpaidInvoices);
+router.get("/unpaid-invoices", verifyToken, controller.getCustomersWithPendingInvoices);
 
 export default router;
