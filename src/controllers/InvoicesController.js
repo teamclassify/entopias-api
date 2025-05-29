@@ -55,6 +55,26 @@ class InvoicesController {
       next(error);
     }
   };
+
+  getTopSellingProducts = async (req, res, next) => {
+    try {
+      const limit = parseInt(req.query.limit) || 5;
+      const result = await this.invoicesService.getTopSellingProducts({
+        limit,
+      });
+
+      const response = new ResponseDataBuilder()
+        .setData(result)
+        .setStatus(200)
+        .setMsg("Top selling products retrieved successfully")
+        .build();
+
+      res.status(200).json(response);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  };
 }
 
 export default InvoicesController;

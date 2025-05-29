@@ -193,7 +193,6 @@ invoicesRouter.get(
   controller.getRecentInvoices
 );
 
-
 /**
  * @swagger
  * /invoices/report:
@@ -236,11 +235,18 @@ invoicesRouter.get(
  *       500:
  *         description: Error al generar el reporte
  */
-invoicesRouter.get("/report", 
-  (req, res, next) => { console.log("[1] --> Entró a invoicesRouter"); next(); },
+invoicesRouter.get(
+  "/report",
+  (req, res, next) => {
+    console.log("[1] --> Entró a invoicesRouter");
+    next();
+  },
   // verifyToken,
-  (req, res, next) => { console.log("[2] --> Pasó verifyToken"); next(); },
-  // isSalesOrAdmin, 
+  (req, res, next) => {
+    console.log("[2] --> Pasó verifyToken");
+    next();
+  },
+  // isSalesOrAdmin,
   [
     query("from").optional().isISO8601().toDate(),
     query("to").optional().isISO8601().toDate(),
@@ -248,9 +254,35 @@ invoicesRouter.get("/report",
   ],
   (req, res, next) => {
     console.log(">>> Entró a /report");
-    console.log("holaaa");  
+    console.log("holaaa");
     reportController.generatePdf(req, res, next);
   }
+);
+
+/**
+ * @swagger
+ * /invoices/top-selling:
+ *   get:
+ *     summary: Obtener productos más vendidos
+ *     tags: [Invoices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Número de productos a retornar
+ *     responses:
+ *       200:
+ *         description: Productos más vendidos obtenidos correctamente
+ */
+invoicesRouter.get(
+  "/top-selling",
+  verifyToken,
+  isSalesOrAdmin,
+  [query("limit").optional().isInt({ min: 1 }).toInt()],
+  controller.getTopSellingProducts
 );
 
 export default invoicesRouter;
