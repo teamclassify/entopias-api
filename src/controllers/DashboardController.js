@@ -1,5 +1,5 @@
 import ResponseDataBuilder from "../models/ResponseData.js";
-import DashboardService from "../services/DashboardService.js";
+import DashboardService from "../services/DashBoardService.js";
 
 class DashboardController {
   constructor() {

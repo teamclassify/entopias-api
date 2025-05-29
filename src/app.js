@@ -19,7 +19,7 @@ import shipmentRouter from "./routes/Shipment.js";
 import statsRoutes from "./routes/Stats.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
-import DashboardRouter from "./routes/Dashboard.js";
+import DashboardRouter from "./routes/dashboard.js";
 
 const app = express();
 
