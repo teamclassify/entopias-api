@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Reporte de Ventas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1em;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Reporte de Ventas</h1>
+    <h2>De {{from}} Hasta {{to}}</h2>
+
+    <p><strong>Total de Ventas:</strong> {{totalVentas}}</p>
+    <p><strong>Número de Pedidos:</strong> {{cantidadPedidos}}</p>
+    <p><strong>Productos Vendidos:</strong> {{productosVendidos}}</p>
+    <p><strong>Ingresos Generados:</strong> ${{ingresosGenerados}}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Monto</th>
+                <th>Estado de Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#invoices}}
+            <tr>
+                <td>{{id}}</td>
+                <td>{{date}}</td>
+                <td>{{order.user.name}}</td>
+                <td>${{amount}}</td>
+                <td>{{status}}</td>
+            </tr>
+            {{/invoices}}
+        </tbody>
+    </table>
+</body>
+
+</html>

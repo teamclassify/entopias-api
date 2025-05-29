@@ -4,9 +4,11 @@ import { body, query } from "express-validator";
 import InvoicesController from "../controllers/InvoicesController.js";
 import { isSalesOrAdmin } from "../middlewares/rbac.js";
 import verifyToken from "../middlewares/verifyToken.js";
+import ReportController from "../controllers/ReportController.js";
 
 const invoicesRouter = express.Router();
 const controller = new InvoicesController();
+const reportController = new ReportController();
 
 /**
  * @swagger
@@ -169,6 +171,66 @@ invoicesRouter.get(
   ],
 
   controller.getInvoices
+);
+
+
+/**
+ * @swagger
+ * /invoices/report:
+ *   get:
+ *     summary: Generar un reporte en PDF de las facturas
+ *     tags: [Invoices]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Fecha de inicio del reporte (formato YYYY-MM-DD)
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: false
+ *         description: Fecha de fin del reporte (formato YYYY-MM-DD)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 500
+ *         required: false
+ *         description: Límite de facturas a incluir en el reporte
+ *     responses:
+ *       200:
+ *         description: PDF generado exitosamente
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       500:
+ *         description: Error al generar el reporte
+ */
+invoicesRouter.get("/report", 
+  (req, res, next) => { console.log("[1] --> Entró a invoicesRouter"); next(); },
+  verifyToken,
+  (req, res, next) => { console.log("[2] --> Pasó verifyToken"); next(); },
+  isSalesOrAdmin, 
+  [
+    query("from").optional().isISO8601().toDate(),
+    query("to").optional().isISO8601().toDate(),
+    query("limit").optional().isInt({ min: 1, max: 500 }).toInt(),
+  ],
+  (req, res, next) => {
+    console.log(">>> Entró a /report");
+    console.log("holaaa");  
+    reportController.generatePdf(req, res, next);
+  }
 );
 
 export default invoicesRouter;
