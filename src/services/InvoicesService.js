@@ -1,7 +1,7 @@
 import prisma from "../config/prisma.js";
 
 class InvoicesService {
-  constructor() {}
+  constructor() { }
 
   async countAll({ where } = {}) {
     const count = await prisma.invoice.count({
@@ -64,6 +64,41 @@ class InvoicesService {
       },
     });
 
+    return invoice;
+  }
+
+  async findByDateRange({ from, to, limit }) {
+
+    const where = {};
+
+    console.log("fechas", where.data.gte, where.data.lte);
+
+    if (from || to) {
+        where.date = {};
+        if (from) where.date.gte = from;
+        if (to) where.date.lte = to;
+    }
+
+    const invoice = await prisma.invoice.findMany({
+      where,
+      take: limit,
+      include: {
+        order: {
+          include: {
+            user: true,
+            items: {
+              include: {
+                variety: {
+                  include: {
+                    product: true
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
     return invoice;
   }
 

@@ -3,6 +3,7 @@ import ResponseDataBuilder from "../models/ResponseData.js";
 import UserService from "../services/UserService.js";
 
 const verifyToken = (req, res, next) => {
+   console.log(">> Entró a verifyToken");
   let token = req.headers.authorization;
 
   const userService = new UserService();

@@ -50,10 +50,12 @@ export const isSales = async (req, res, next) => {
 };
 
 export const isSalesOrAdmin = async (req, res, next) => {
+  console.log(">> Entró a issalesjnfjd");
   const userService = new UserService();
 
   try {
     const { roles } = await userService.findOne(req.id);
+    
 
     const hasRole = roles.some((role) => [0, 1].includes(role.roleId));
     if (hasRole) {
@@ -67,7 +69,6 @@ export const isSalesOrAdmin = async (req, res, next) => {
       .setError(true)
       .setMsg("Requiere rol de asistente o administrador!")
       .build();
-
     res.status(403).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
