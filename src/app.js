@@ -15,9 +15,12 @@ import paymentsRouter from "./routes/Payments.js";
 import producerRouter from "./routes/Producer.js";
 import productsRouter from "./routes/Products.js";
 import roleRoutes from "./routes/RoleRoutes.js";
+import shipmentRouter from "./routes/Shipment.js";
+import statsRoutes from "./routes/Stats.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
-import statsRoutes from "./routes/Stats.js";
+import DashboardRouter from "./routes/dashboard.js";
+import customerStatsRoutes from "./routes/CustomerStats.js";
 
 const app = express();
 
@@ -28,7 +31,7 @@ const limiter = rateLimit({
   legacyHeaders: false,
   keyGenerator: (req) => {
     return req.ip;
-  }
+  },
 });
 
 app.use(
@@ -68,7 +71,11 @@ app.use("/api/cart", cartRouter);
 app.use("/api/invoices", invoicesRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/addresses", adressRoutes);
-app.use("/api/stats", statsRoutes); 
+app.use("/api/stats", statsRoutes);
+app.use("/api/shipments", shipmentRouter);
+app.use("/api/stats", statsRoutes);
+app.use("/api/admin", DashboardRouter); 
+app.use("/api/customer-stats", customerStatsRoutes);
 
 app.use(handleErrors);
 

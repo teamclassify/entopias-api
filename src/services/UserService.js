@@ -153,6 +153,24 @@ class UserService {
 
     return updatedUser;
   }
+
+  async getRecentUsers(limit = 5) {
+    const users = await prisma.user.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: limit,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        photo: true,
+      },
+    });
+
+    return users;
+  }
 }
 
 export default UserService;

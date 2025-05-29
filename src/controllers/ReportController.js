@@ -1,23 +1,22 @@
-import mustache from 'mustache';
-import * as puppeteer from 'puppeteer';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-import * as fs from 'fs/promises';
-import InvoicesService from '../services/InvoicesService.js';
-
+import * as fs from "fs/promises";
+import mustache from "mustache";
+import * as path from "path";
+// import * as puppeteer from "puppeteer";
+import pdf from "html-pdf-node";
+import { fileURLToPath } from "url";
+import InvoicesService from "../services/InvoicesService.js";
 
 class ReportController {
-
     constructor() {
         this.invoicesService = new InvoicesService();
     }
 
     generatePdf = async (req, res, next) => {
-
         const { from, to, limit = 100 } = req.query;
 
         // Validar fechas
-        const parsedFrom = from && !isNaN(new Date(from)) ? new Date(from) : undefined;
+        const parsedFrom =
+            from && !isNaN(new Date(from)) ? new Date(from) : undefined;
         const parsedTo = to && !isNaN(new Date(to)) ? new Date(to) : undefined;
 
         // Formatear fechas a dd/mm/aaaa
@@ -54,7 +53,6 @@ class ReportController {
 
 
         try {
-
             // Llamar las facturas
             const invoices = await this.invoicesService.findByDateRange({
                 from: parsedFrom,
@@ -77,10 +75,16 @@ class ReportController {
                 date: formatearFechaIso(invoice.date),
             }));
 
+            
             // Cargar la plantilla
-            const templatePath = path.join(__dirname, '..', 'pdf', 'invoiceReport.html')
+            const templatePath = path.join(
+                __dirname,
+                "..",
+                "pdf",
+                "invoiceReport.html"
+            );
             console.log(templatePath);
-            const template = await fs.readFile(templatePath, 'utf8');
+            const template = await fs.readFile(templatePath, "utf8");
 
             // Renderizar el html
             const html = mustache.render(template,
@@ -95,23 +99,31 @@ class ReportController {
                 });
 
             // Generar el pdf con puppeteer
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-            await page.setContent(html, { waitUntil: 'load' });
-            const pdfBuffer = await page.pdf({ format: 'A4' });
-            await browser.close();
+            // const browser = await puppeteer.launch();
+            // const page = await browser.newPage();
+            // await page.setContent(html, { waitUntil: "load" });
+            // const pdfBuffer = await page.pdf({ format: "A4" });
+            // await browser.close();
+            // const result = Buffer.from(pdfBuffer);
 
+            // generar pdf pero con otra librería pdfkit
+            const options = { format: "A4" };
+            const file = { content: html };
+
+            const pdfBuffer = await pdf.generatePdf(file, options);
             const result = Buffer.from(pdfBuffer);
 
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'attachment; filename="reporte-facturas.pdf"');
+            res.setHeader("Content-Type", "application/pdf");
+            res.setHeader(
+                "Content-Disposition",
+                'attachment; filename="reporte-facturas.pdf"'
+            );
             res.send(result);
-
         } catch (error) {
             console.error(error);
             next(error);
         }
-    }
+    };
 }
 
 export default ReportController;
