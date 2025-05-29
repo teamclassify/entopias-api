@@ -21,6 +21,7 @@ import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
 import DashboardRouter from "./routes/dashboard.js";
 import customerStatsRoutes from "./routes/CustomerStats.js";
+import emailRoutes from "./routes/Email.js";
 
 const app = express();
 
@@ -76,6 +77,7 @@ app.use("/api/shipments", shipmentRouter);
 app.use("/api/stats", statsRoutes);
 app.use("/api/admin", DashboardRouter); 
 app.use("/api/customer-stats", customerStatsRoutes);
+app.use("/api/emails", emailRoutes);
 
 app.use(handleErrors);
 
