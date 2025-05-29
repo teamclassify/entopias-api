@@ -60,7 +60,7 @@ class InvoicesService {
               },
             },
           },
-        }
+        },
       },
     });
 
@@ -100,6 +100,35 @@ class InvoicesService {
       },
     });
     return invoice;
+  }
+
+  async getRecentInvoices() {
+    const invoices = await prisma.invoice.findMany({
+      where: { status: "paid" },
+      orderBy: { date: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        amount: true,
+        date: true,
+        order: {
+          select: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return invoices.map((inv) => ({
+      id: inv.id,
+      amount: inv.amount,
+      date: inv.date,
+      cliente: inv.order.user.name,
+    }));
   }
 }
 

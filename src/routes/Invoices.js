@@ -173,6 +173,26 @@ invoicesRouter.get(
   controller.getInvoices
 );
 
+/**
+ * @swagger
+ * /invoices/recent:
+ *   get:
+ *     summary: Obtener las últimas facturas registradas
+ *     tags: [Invoices]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Últimas facturas obtenidas correctamente
+ */
+
+invoicesRouter.get(
+  "/recent",
+  verifyToken,
+  isSalesOrAdmin,
+  controller.getRecentInvoices
+);
+
 
 /**
  * @swagger

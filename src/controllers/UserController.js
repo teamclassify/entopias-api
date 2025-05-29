@@ -1,6 +1,7 @@
 import ResponseDataBuilder from "../models/ResponseData.js";
 import UserService from "../services/UserService.js";
 import validateBody from "../validators/validator.js";
+import prisma from "../config/prisma.js";
 
 class UserController {
   static async getAllUsers(req, res, next) {
@@ -149,6 +150,29 @@ class UserController {
       res.json({ message: "Usuario eliminado" });
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+
+  static async getRecentUsers(req, res, next) {
+    try {
+      const users = await prisma.user.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+        },
+      });
+
+      return res.json({
+        status: 200,
+        data: users,
+        msg: "Últimos usuarios cargados",
+      });
+    } catch (error) {
+      next(error);
     }
   }
 }
