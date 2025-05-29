@@ -3,6 +3,7 @@ import prisma from "../config/prisma.js";
 class InvoicesService {
   constructor() { }
 
+
   async countAll({ where } = {}) {
     const count = await prisma.invoice.count({
       where,
@@ -70,8 +71,6 @@ class InvoicesService {
   async findByDateRange({ from, to, limit }) {
 
     const where = {};
-
-    console.log("fechas", where.data.gte, where.data.lte);
 
     if (from || to) {
         where.date = {};

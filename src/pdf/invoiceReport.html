@@ -3,68 +3,121 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Reporte de Ventas</title>
+    <title>Reporte de Facturas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 13px;
+            margin: 40px;
+            color: #181818;
         }
 
-        h1,
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .logo {
+            max-height: 60px;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         h2 {
             text-align: center;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin: 5px 0;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1em;
+            margin-top: 20px;
+            font-size: 12px;
         }
 
         th,
         td {
             border: 1px solid #ccc;
             padding: 8px;
-            text-align: left;
         }
 
         th {
-            background-color: #eee;
+            background-color: #f0f0f0;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
+        .container-1{
+            display: flex;
+            flex-direction: column;
         }
     </style>
 </head>
 
 <body>
-    <h1>Reporte de Ventas</h1>
-    <h2>De {{from}} Hasta {{to}}</h2>
+    <div class="header">
+        <div class="container-1">
+            <h1>Reporte de Facturas</h1>
+            {{#fecha1}}
+            {{#fecha2}}
+            <h3>Del {{fecha1}} al {{fecha2}}</h3>
+            {{/fecha2}}
+            {{/fecha1}}
+        </div>
 
-    <p><strong>Total de Ventas:</strong> {{totalVentas}}</p>
-    <p><strong>Número de Pedidos:</strong> {{cantidadPedidos}}</p>
-    <p><strong>Productos Vendidos:</strong> {{productosVendidos}}</p>
-    <p><strong>Ingresos Generados:</strong> ${{ingresosGenerados}}</p>
+        <img src="{{logo}}" alt="Logo de la empresa" class="logo" />
+    </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Fecha</th>
-                <th>Cliente</th>
-                <th>Monto</th>
-                <th>Estado de Pago</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#invoices}}
-            <tr>
-                <td>{{id}}</td>
-                <td>{{date}}</td>
-                <td>{{order.user.name}}</td>
-                <td>${{amount}}</td>
-                <td>{{status}}</td>
-            </tr>
-            {{/invoices}}
-        </tbody>
-    </table>
+    <div class="content">
+
+        <p><strong>Número de Pedidos:</strong> {{cantidadPedidos}}</p>
+        <p><strong>Productos Vendidos:</strong> {{productosVendidos}}</p>
+        <p><strong>Ingresos Generados:</strong> ${{ingresosGenerados}}</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Monto</th>
+                    <th>Estado de Pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#invoices}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td>{{date}}</td>
+                    <td>{{order.user.name}}</td>
+                    <td>${{amount}}</td>
+                    <td>{{status}}</td>
+                </tr>
+                {{/invoices}}
+            </tbody>
+        </table>
+    </div>
 </body>
 
 </html>
