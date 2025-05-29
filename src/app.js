@@ -19,7 +19,7 @@ import shipmentRouter from "./routes/Shipment.js";
 import statsRoutes from "./routes/Stats.js";
 import userRoutes from "./routes/UserRoutes.js";
 import VarietyRouter from "./routes/Varieties.js";
-import dashboardRouter from "./routes/Dashboard.js";
+import DashboardRouter from "./routes/Dashboard.js";
 
 const app = express();
 
@@ -73,7 +73,7 @@ app.use("/api/addresses", adressRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/shipments", shipmentRouter);
 app.use("/api/stats", statsRoutes);
-app.use("/api/admin", dashboardRouter); 
+app.use("/api/admin", DashboardRouter); 
 
 app.use(handleErrors);
 
